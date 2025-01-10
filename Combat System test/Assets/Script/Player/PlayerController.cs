@@ -76,16 +76,10 @@ public class PlayerController : MonoBehaviour
         //播放盔甲声
         if (moveAmount > minMoveThreshold && isGrounded)
         {
-            float speedPercentage = moveAmount;
-            float pitch = Mathf.Lerp(0.8f, 1.5f, speedPercentage);
-            AudioManager.instance.SetVolume("盔甲声", 4f);
-            AudioManager.instance.SetPitch("盔甲声", pitch);
-
             if (!AudioManager.instance.IsPlaying("盔甲声"))
             {
                 AudioManager.instance.Play("盔甲声");
             }
-
             stopTimer = 0f; // 重置停止计时器
         }
         else
