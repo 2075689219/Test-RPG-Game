@@ -252,8 +252,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53856e62a4d2e804a92e4fdcc33f92f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  attackList:
+  - {fileID: 11400000, guid: f1ee16e177fd2de4495b5fd2aaeacc99, type: 2}
+  - {fileID: 11400000, guid: 3654f845923c2b24db67d7c5ba3125af, type: 2}
+  - {fileID: 11400000, guid: 94a6daa24448abd449460573a3dd245c, type: 2}
+  - {fileID: 11400000, guid: 92f571c011f1d5c419ead8f53e3bbfc8, type: 2}
   weapon: {fileID: 1217556122}
-  attackState: 0
 --- !u!1 &325600431
 GameObject:
   m_ObjectHideFlags: 0
@@ -671,8 +675,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53856e62a4d2e804a92e4fdcc33f92f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  attackList: []
   weapon: {fileID: 1255142259}
-  attackState: 0
 --- !u!136 &738891397
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -1032,6 +1036,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 798505431124993220, guid: d840a6dbc67309048a6b69230a55f1f7, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2340886336763378685, guid: d840a6dbc67309048a6b69230a55f1f7, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -1080,7 +1088,15 @@ PrefabInstance:
       propertyPath: m_Name
       value: Knight_05_03
       objectReference: {fileID: 0}
+    - target: {fileID: 5556116114812017704, guid: d840a6dbc67309048a6b69230a55f1f7, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6523353124787554672, guid: d840a6dbc67309048a6b69230a55f1f7, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8450769337238357371, guid: d840a6dbc67309048a6b69230a55f1f7, type: 3}
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
