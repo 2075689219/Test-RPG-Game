@@ -6,6 +6,8 @@ using UnityEngine;
 public class AttackData : ScriptableObject
 {
     [field: SerializeField] public string AnimName { get; private set; }
+    [field: SerializeField] public AttackHitBox HitBox { get; private set; }
     [field: SerializeField] public float StartTime { get; private set; }//实际是百分比
     [field: SerializeField] public float EndTime { get; private set; }
 }
+public enum AttackHitBox {weapon}//暂时只有weapon

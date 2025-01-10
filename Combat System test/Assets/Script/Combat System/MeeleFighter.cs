@@ -17,12 +17,12 @@ public class MeeleFighter : MonoBehaviour
     bool doCombo;
     int comboCount = 0;
 
-    //////////////////Awake()////////////////////////////////////////////////////////////////////
+//////////////////Awake()////////////////////////////////////////////////////////////////////
     private void Awake()
     {
         animator = GetComponent<Animator>();
     }
-    //////////////////Start()////////////////////////////////////////////////////////////////////
+//////////////////Start()////////////////////////////////////////////////////////////////////
     private void Start()
     {
         if (weapon != null)
@@ -32,7 +32,7 @@ public class MeeleFighter : MonoBehaviour
         }
 
     }
-    //////////////////Attack()////////////////////////////////////////////////////////////////////
+//////////////////Attack()////////////////////////////////////////////////////////////////////
     public void TryToAttack()
     {
         if (!InAction)
@@ -50,7 +50,6 @@ public class MeeleFighter : MonoBehaviour
         InAction = true;
         attackState = AttackState.start;
 
-
         animator.CrossFade(attackList[comboCount].AnimName, 0.2f);//占用当前动画的20%时间过渡，必须保证前一个动画的时间不能太长
         yield return null;//等待一帧，保证接下来的动画处于过渡阶段
         var animState = animator.GetNextAnimatorStateInfo(1);//获取下一个动画的信息(也就是攻击动画)
@@ -66,15 +65,15 @@ public class MeeleFighter : MonoBehaviour
             {
                 attackState = AttackState.impact;
                 //攻击生效
-                weaponCollider.enabled = true;
-                Debug.Log("Impact");
+                EnableHitBox(attackList[comboCount]);
+                //播放音效
+                AudioManager.instance.Play(attackList[comboCount].name);
             }
             if (attackState == AttackState.impact && normalizedTime >= attackList[comboCount].EndTime)
             {
                 attackState = AttackState.end;
                 //结束攻击
-                weaponCollider.enabled = false;
-                Debug.Log("End");
+                DisableAllHitBox();
             }
             else if (attackState == AttackState.end)
             {
@@ -94,7 +93,7 @@ public class MeeleFighter : MonoBehaviour
         comboCount = 0;
         InAction = false;
     }
-    //////////////////HitReaction()////////////////////////////////////////////////////////////////////
+//////////////////HitReaction()////////////////////////////////////////////////////////////////////
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag == "HitBox" && !InAction)//攻击状态不可以被打断（播放受击动画）
@@ -113,5 +112,21 @@ public class MeeleFighter : MonoBehaviour
         yield return new WaitForSeconds(animState.length * 0.6f);
 
         InAction = false;
+    }
+
+    void EnableHitBox(AttackData attack)
+    {
+        switch (attack.HitBox)
+        {
+            case AttackHitBox.weapon:
+                weaponCollider.enabled = true;
+                break;
+        }
+
+    }
+
+    void DisableAllHitBox()
+    {
+        weaponCollider.enabled = false;
     }
 }

@@ -12,6 +12,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float groundCheckRidous = 0.2f;
     [SerializeField] Vector3 groundCheckOffset;
     [SerializeField] LayerMask groundLayer;
+    [Header("部分音效（盔甲）")]
+    [SerializeField] private float minMoveThreshold = 0.2f; // 播放音效的最小移动量
+    [SerializeField] private float stopDelay = 0.5f; // 停止音效的延迟时间
+    private float stopTimer = 0f; // 记录停止音效的计时器
     Quaternion targetRotation;
     CameraController cameraController;
     Animator animator;
@@ -36,7 +40,6 @@ public class PlayerController : MonoBehaviour
             animator.SetFloat("moveAmount", 0);
             return;
         }
-        
 
         float h = Input.GetAxis("Horizontal");
         float v = Input.GetAxis("Vertical");
@@ -50,7 +53,8 @@ public class PlayerController : MonoBehaviour
         if (isGrounded)
         {
             ySpeed = -0.3f;
-        }else
+        }
+        else
         {
             ySpeed += Physics.gravity.y * Time.deltaTime;
         }
@@ -61,7 +65,6 @@ public class PlayerController : MonoBehaviour
         characterController.Move(velocity * Time.deltaTime);
         if (moveAmount > 0f)
         {
-
             targetRotation = Quaternion.LookRotation(moveDir);//转向
         }
         //平滑旋转
@@ -69,6 +72,30 @@ public class PlayerController : MonoBehaviour
         targetRotation, rotateSpeed * Time.deltaTime);
 
         animator.SetFloat("moveAmount", moveAmount, 0.25f, Time.deltaTime);
+
+        //播放盔甲声
+        if (moveAmount > minMoveThreshold && isGrounded)
+        {
+            float speedPercentage = moveAmount;
+            float pitch = Mathf.Lerp(0.8f, 1.5f, speedPercentage);
+            AudioManager.instance.SetVolume("盔甲声", 4f);
+            AudioManager.instance.SetPitch("盔甲声", pitch);
+
+            if (!AudioManager.instance.IsPlaying("盔甲声"))
+            {
+                AudioManager.instance.Play("盔甲声");
+            }
+
+            stopTimer = 0f; // 重置停止计时器
+        }
+        else
+        {
+            stopTimer += Time.deltaTime;
+            if (stopTimer >= stopDelay && AudioManager.instance.IsPlaying("盔甲声"))
+            {
+                AudioManager.instance.Stop("盔甲声");
+            }
+        }
     }
 
 
