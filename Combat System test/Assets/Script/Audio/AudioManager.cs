@@ -6,7 +6,7 @@ public struct AudioData
 {
     public string name;        // 自定义音频名称
     public AudioClip clip;     // 对应的音频文件
-    public float defaultVolume ; // 默认音量 
+    public float defaultVolume; // 默认音量
     public string group;       // 分组名称（可选）
 }
 
@@ -40,6 +40,7 @@ public class AudioManager : MonoBehaviour
             AudioSource source = gameObject.AddComponent<AudioSource>();
             source.clip = data.clip;
             source.volume = data.defaultVolume > 0 ? data.defaultVolume : 1f; // 如果未设置，默认音量为 1
+            source.spatialBlend = 0f; // 默认2D音效
             audioSources.Add(data.name, source);
 
             // 添加到对应的分组
@@ -77,6 +78,27 @@ public class AudioManager : MonoBehaviour
         if (audioSources.TryGetValue(audioName, out AudioSource source))
         {
             source.Play();
+        }
+        else
+        {
+            Debug.LogWarning($"Audio with name {audioName} not found!");
+        }
+    }
+
+    // 播放3D音效
+    public void Play3D(string audioName, Vector3 position)
+    {
+        if (audioSources.TryGetValue(audioName, out AudioSource source))
+        {
+            GameObject tempAudioSource = new GameObject($"3D_Audio_{audioName}");
+            tempAudioSource.transform.position = position;
+            AudioSource tempSource = tempAudioSource.AddComponent<AudioSource>();
+            tempSource.clip = source.clip;
+            tempSource.volume = source.volume;
+            tempSource.spatialBlend = 1f; // 设置为3D音效
+            tempSource.Play();
+
+            Destroy(tempAudioSource, source.clip.length); // 播放完成后销毁
         }
         else
         {

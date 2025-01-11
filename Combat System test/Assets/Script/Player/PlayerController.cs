@@ -13,9 +13,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] Vector3 groundCheckOffset;
     [SerializeField] LayerMask groundLayer;
     [Header("盔甲音效设置")]
-    [SerializeField] private AudioClip armorSound; // 盔甲音效
     [SerializeField] private float minMoveThreshold = 0.2f; // 播放音效的最小移动量
-    [SerializeField] private float soundInterval = 0.5f; // 音效播放间隔
+    [SerializeField] private float soundInterval = 22f; // 音效播放间隔
     private float soundTimer = 0f; // 音效计时器
     Quaternion targetRotation;
     CameraController cameraController;
