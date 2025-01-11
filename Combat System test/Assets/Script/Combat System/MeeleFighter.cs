@@ -67,7 +67,7 @@ public class MeeleFighter : MonoBehaviour
                 //攻击生效
                 EnableHitBox(attackList[comboCount]);
                 //播放音效
-                AudioManager.instance.Play(attackList[comboCount].name);
+                AudioManager.Instance.Play(attackList[comboCount].name);
             }
             if (attackState == AttackState.impact && normalizedTime >= attackList[comboCount].EndTime)
             {

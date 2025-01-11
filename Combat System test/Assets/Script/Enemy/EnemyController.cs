@@ -6,7 +6,7 @@ using UnityEngine.AI;
 public enum EnemyState//敌人状态
 {
     Idle,
-    Chase,
+    CombatMove,
     Attack,
     Dead
 }
@@ -36,7 +36,7 @@ public class EnemyController : MonoBehaviour
         //创建enemy状态字典并添加状态
         stateDict = new Dictionary<EnemyState, State<EnemyController>>();
         stateDict[EnemyState.Idle] = GetComponent<IdleState>();
-        stateDict[EnemyState.Chase] = GetComponent<ChaseState>();
+        stateDict[EnemyState.CombatMove] = GetComponent<CombatMoveState>();
 
        //创建enemy状态机并切换到Idle状态
         stateMachine = new StateMachine<EnemyController>(this);
@@ -49,6 +49,11 @@ public class EnemyController : MonoBehaviour
     }
     private void Update()
     {
+        //更新动画
+        float moveAmount = NavMeshAgent.velocity.magnitude / NavMeshAgent.speed;
+        Animator.SetFloat("moveAmount", moveAmount);
+        
+        //执行状态机
         stateMachine.Execute();
     }
 

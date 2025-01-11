@@ -12,10 +12,11 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float groundCheckRidous = 0.2f;
     [SerializeField] Vector3 groundCheckOffset;
     [SerializeField] LayerMask groundLayer;
-    [Header("部分音效（盔甲）")]
+    [Header("盔甲音效设置")]
+    [SerializeField] private AudioClip armorSound; // 盔甲音效
     [SerializeField] private float minMoveThreshold = 0.2f; // 播放音效的最小移动量
-    [SerializeField] private float stopDelay = 0.5f; // 停止音效的延迟时间
-    private float stopTimer = 0f; // 记录停止音效的计时器
+    [SerializeField] private float soundInterval = 0.5f; // 音效播放间隔
+    private float soundTimer = 0f; // 音效计时器
     Quaternion targetRotation;
     CameraController cameraController;
     Animator animator;
@@ -74,23 +75,9 @@ public class PlayerController : MonoBehaviour
         animator.SetFloat("moveAmount", moveAmount, 0.25f, Time.deltaTime);
 
         //播放盔甲声
-        if (moveAmount > minMoveThreshold && isGrounded)
-        {
-            if (!AudioManager.instance.IsPlaying("盔甲声"))
-            {
-                AudioManager.instance.Play("盔甲声");
-            }
-            stopTimer = 0f; // 重置停止计时器
-        }
-        else
-        {
-            stopTimer += Time.deltaTime;
-            if (stopTimer >= stopDelay && AudioManager.instance.IsPlaying("盔甲声"))
-            {
-                AudioManager.instance.Stop("盔甲声");
-            }
-        }
+        PlayArmorSound(moveAmount);
     }
+
 
 
     //地面检测
@@ -98,6 +85,21 @@ public class PlayerController : MonoBehaviour
     {
         isGrounded = Physics.CheckSphere(transform.TransformPoint(groundCheckOffset)
         , groundCheckRidous, groundLayer);
+    }
+
+    private void PlayArmorSound(float moveAmount)
+    {
+        soundTimer += Time.deltaTime;
+
+        if (moveAmount > minMoveThreshold && soundTimer >= soundInterval)
+        {
+            AudioManager.Instance.Play("armorSound"); // 播放盔甲音效
+            soundTimer = 0f;
+        }
+        else if (moveAmount <= minMoveThreshold)
+        {
+            AudioManager.Instance.Stop("armorSound"); // 停止盔甲音效
+        }
     }
 
     //unity编辑器中绘制Gizmos，方便观察GroundCheck

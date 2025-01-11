@@ -22,7 +22,7 @@ public class IdleState : State<EnemyController>
             if( angle <= enemy.fov /2)
             {
                 enemy.Target = target;//选中目标
-                enemy.ChangeState(EnemyState.Chase);//切换到追击状态
+                enemy.ChangeState(EnemyState.CombatMove);//切换到追击状态
                 break;
             }
         }

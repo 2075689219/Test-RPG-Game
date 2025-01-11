@@ -1,122 +1,133 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
+public struct AudioData
+{
+    public string name;        // 自定义音频名称
+    public AudioClip clip;     // 对应的音频文件
+    public float defaultVolume ; // 默认音量 
+    public string group;       // 分组名称（可选）
+}
+
 public class AudioManager : MonoBehaviour
 {
-    public static AudioManager instance;
-    public AudioType[] audioTypes;
+    public static AudioManager Instance;
+
+    [SerializeField] private List<AudioData> audioDataList; // 配置音效数据
+    private Dictionary<string, AudioSource> audioSources;   // 自定义名称到 AudioSource 的映射
+    private Dictionary<string, List<string>> audioGroups;   // 分组名到音效名称列表的映射
 
     private void Awake()
     {
-        if (instance == null)
+        if (Instance == null)
         {
-            instance = this;
+            Instance = this;
+            DontDestroyOnLoad(gameObject); // 跨场景持久化
         }
         else
         {
             Destroy(gameObject);
             return;
         }
-        DontDestroyOnLoad(gameObject);
-    }
 
-    private void Start()
-    {
-        foreach (AudioType type in audioTypes)
+        audioSources = new Dictionary<string, AudioSource>();
+        audioGroups = new Dictionary<string, List<string>>();
+
+        // 初始化音效数据
+        foreach (var data in audioDataList)
         {
-            type.Source = gameObject.AddComponent<AudioSource>();
-            type.Source.clip = type.Clip;
-            type.Source.volume = type.Volume;
-            type.Source.pitch = type.Pitch;
-            type.Source.loop = type.Loop;
-            type.Source.playOnAwake = type.PlayOnAwake;
+            AudioSource source = gameObject.AddComponent<AudioSource>();
+            source.clip = data.clip;
+            source.volume = data.defaultVolume > 0 ? data.defaultVolume : 1f; // 如果未设置，默认音量为 1
+            audioSources.Add(data.name, source);
 
-            if (type.Group != null)
+            // 添加到对应的分组
+            if (!string.IsNullOrEmpty(data.group))
             {
-                type.Source.outputAudioMixerGroup = type.Group;
+                if (!audioGroups.ContainsKey(data.group))
+                {
+                    audioGroups[data.group] = new List<string>();
+                }
+                audioGroups[data.group].Add(data.name);
             }
         }
     }
 
-    public void Play(string name)//播放音效
+    private void Start()
     {
-        AudioType type = Array.Find(audioTypes, audioType => audioType.Name == name);
-        if (type == null)
-        {
-            Debug.LogWarning("Audio: " + name + " not found!");
-            return;
-        }
-        type.Source.Play();
+        PreloadAudio(); // 预加载音频数据
     }
 
-    public void Play(string name, float pitch = 1f) // 支持动态设置 pitch
+    private void PreloadAudio()
     {
-        AudioType type = Array.Find(audioTypes, audioType => audioType.Name == name);
-        if (type == null)
+        foreach (var data in audioDataList)
         {
-            Debug.LogWarning("Audio: " + name + " not found!");
-            return;
+            AudioClip preloadClip = data.clip;
+            if (preloadClip.loadState != AudioDataLoadState.Loaded)
+            {
+                preloadClip.LoadAudioData();
+            }
         }
-        type.Source.pitch = pitch;
-        type.Source.Play();
     }
 
-    public void Stop(string name)//停止音效
+    // 播放音效
+    public void Play(string audioName)
     {
-        AudioType type = Array.Find(audioTypes, audioType => audioType.Name == name);
-        if (type == null)
+        if (audioSources.TryGetValue(audioName, out AudioSource source))
         {
-            Debug.LogWarning("Audio: " + name + " not found!");
-            return;
+            source.Play();
         }
-        type.Source.Stop();
+        else
+        {
+            Debug.LogWarning($"Audio with name {audioName} not found!");
+        }
     }
 
-
-    public void Pause(string name)//暂停音效
+    // 随机播放指定分组的音效
+    public void PlayRandomFromGroup(string groupName)
     {
-        AudioType type = Array.Find(audioTypes, audioType => audioType.Name == name);
-        if (type == null)
+        if (audioGroups.TryGetValue(groupName, out List<string> group))
         {
-            Debug.LogWarning("Audio: " + name + " not found!");
-            return;
+            int randomIndex = Random.Range(0, group.Count);
+            Play(group[randomIndex]);
         }
-        type.Source.Pause();
+        else
+        {
+            Debug.LogWarning($"Audio group {groupName} not found!");
+        }
     }
 
-    public void SetPitch(string name, float pitch) // 动态调整 pitch
+    // 设置音量
+    public void SetVolume(string audioName, float volume)
     {
-        AudioType type = Array.Find(audioTypes, audioType => audioType.Name == name);
-        if (type == null)
+        if (audioSources.TryGetValue(audioName, out AudioSource source))
         {
-            Debug.LogWarning("Audio: " + name + " not found!");
-            return;
+            source.volume = Mathf.Clamp01(volume);
         }
-        type.Source.pitch = pitch;
     }
 
-    public bool IsPlaying(string name)//判断音效是否正在播放
+    // 停止音效
+    public void Stop(string audioName)
     {
-        AudioType type = Array.Find(audioTypes, audioType => audioType.Name == name);
-        if (type == null)
+        if (audioSources.TryGetValue(audioName, out AudioSource source))
         {
-            Debug.LogWarning("Audio: " + name + " not found!");
-            return false;
+            source.Stop();
         }
-        return type.Source.isPlaying;
     }
 
-    //调整音量大小
-    public void SetVolume(string name, float volume)
+    // 当面板数据变化时自动更新音量
+    private void OnValidate()
     {
-        AudioType type = Array.Find(audioTypes, audioType => audioType.Name == name);
-        if (type == null)
+        if (audioSources != null)
         {
-            Debug.LogWarning("Audio: " + name + " not found!");
-            return;
+            foreach (var data in audioDataList)
+            {
+                if (audioSources.TryGetValue(data.name, out AudioSource source))
+                {
+                    source.volume = data.defaultVolume;
+                }
+            }
         }
-        type.Source.volume = volume;
     }
 }
