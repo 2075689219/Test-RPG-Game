@@ -70,7 +70,13 @@ public class CombatMoveState : State<EnemyController>
                 StartIdle();
                 return;
             }
-            transform.RotateAround(enemy.Target.transform.position, Vector3.up, circlingSpeed * circlingDirection * Time.deltaTime);
+        
+            var vecTotarget = enemy.Target.transform.position - transform.position;
+
+            var rotatePsoition = Quaternion.Euler(0, circlingSpeed * circlingDirection * Time.deltaTime, 0) * vecTotarget;
+            enemy.NavMeshAgent.Move(rotatePsoition - vecTotarget);
+
+            enemy.transform.rotation = Quaternion.LookRotation(rotatePsoition);
         }
 
         if (timer > 0)
@@ -87,7 +93,6 @@ public class CombatMoveState : State<EnemyController>
     void StartIdle()//切换到Combat_Idle状态,而非Idle状态
     {
         enemy.Animator.SetBool("combatMode", true);
-         enemy.Animator.SetBool("circling", false);
         timer = Random.Range(idleTimeRange.x, idleTimeRange.y);
         State = AICombatState.Idle;
     }
@@ -95,7 +100,6 @@ public class CombatMoveState : State<EnemyController>
     void StartChase()
     {
         enemy.Animator.SetBool("combatMode", false);
-        enemy.Animator.SetBool("circling", false);
         State = AICombatState.Chase;
     }
 
@@ -103,11 +107,8 @@ public class CombatMoveState : State<EnemyController>
     {
         timer = Random.Range(circlingTimeRange.x, circlingTimeRange.y);
         State = AICombatState.Circling;
-
+        enemy.NavMeshAgent.ResetPath();//TODO:这里有问题,关于敌人处于circling状态时，如果玩家移动，敌人的旋转中心不会变
         circlingDirection = (Random.Range(0, 2) == 0) ? -1 : 1;
-
-        enemy.Animator.SetBool("circling", true);
-        enemy.Animator.SetFloat("circlingDirection", circlingDirection);
     }
     void Chase()
     {

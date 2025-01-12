@@ -27,7 +27,7 @@ public class EnemyController : MonoBehaviour
     public NavMeshAgent NavMeshAgent { get; private set; }
     public Animator Animator { get; private set; }
     private void Start()
-    {   
+    {
         //获取Animator组件
         Animator = GetComponent<Animator>();
         //获取NavMeshAgent组件
@@ -38,7 +38,7 @@ public class EnemyController : MonoBehaviour
         stateDict[EnemyState.Idle] = GetComponent<IdleState>();
         stateDict[EnemyState.CombatMove] = GetComponent<CombatMoveState>();
 
-       //创建enemy状态机并切换到Idle状态
+        //创建enemy状态机并切换到Idle状态
         stateMachine = new StateMachine<EnemyController>(this);
         stateMachine.ChangeState(stateDict[EnemyState.Idle]);
     }
@@ -47,14 +47,24 @@ public class EnemyController : MonoBehaviour
     {
         stateMachine.ChangeState(stateDict[state]);
     }
+    Vector3 prePos;
     private void Update()
     {
-        //更新动画
-        float moveAmount = NavMeshAgent.velocity.magnitude / NavMeshAgent.speed;
-        Animator.SetFloat("moveAmount", moveAmount);
-        
         //执行状态机
         stateMachine.Execute();
+
+        var deltaPos = transform.position - prePos;
+        var velocity = deltaPos / Time.deltaTime;
+
+        float forwardSpeed = Vector3.Dot(transform.forward, velocity); //计算前向速度 
+        float forwardSpeedPercent = forwardSpeed / NavMeshAgent.speed;//速度百分比
+        Animator.SetFloat("forwardSpeed", forwardSpeedPercent, 0.2f, Time.deltaTime);
+
+        float angle = Vector3.SignedAngle(transform.forward, velocity, Vector3.up);
+        float strafeSpeed = Mathf.Sin(angle * Mathf.Deg2Rad);//计算横向速度
+        Animator.SetFloat("strafeSpeed", strafeSpeed, 0.2f, Time.deltaTime);
+
+        prePos = transform.position;
     }
 
 
