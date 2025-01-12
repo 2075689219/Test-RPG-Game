@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public enum AttackState { none, start, impact, end }
+public enum AttackStates { none, start, impact, end }
 public class MeeleFighter : MonoBehaviour
 {
     [SerializeField] List<AttackData> attackList;
@@ -13,7 +13,7 @@ public class MeeleFighter : MonoBehaviour
     Animator animator;
     public bool InAction { get; private set; } = false;
 
-    private AttackState attackState;
+    public AttackStates AttackState { get; private set; }
     bool doCombo;
     int comboCount = 0;
 
@@ -39,7 +39,7 @@ public class MeeleFighter : MonoBehaviour
         {
             StartCoroutine(Attack());
         }
-        else if (attackState == AttackState.impact || attackState == AttackState.end)
+        else if (AttackState == AttackStates.impact || AttackState == AttackStates.end)
         {
             doCombo = true;
         }
@@ -48,7 +48,7 @@ public class MeeleFighter : MonoBehaviour
     IEnumerator Attack()
     {
         InAction = true;
-        attackState = AttackState.start;
+        AttackState = AttackStates.start;
 
         animator.CrossFade(attackList[comboCount].AnimName, 0.2f);//占用当前动画的20%时间过渡，必须保证前一个动画的时间不能太长
         yield return null;//等待一帧，保证接下来的动画处于过渡阶段
@@ -61,21 +61,21 @@ public class MeeleFighter : MonoBehaviour
             timer += Time.deltaTime;
             float normalizedTime = timer / animState.length;
 
-            if (attackState == AttackState.start && normalizedTime >= attackList[comboCount].StartTime)
+            if (AttackState == AttackStates.start && normalizedTime >= attackList[comboCount].StartTime)
             {
-                attackState = AttackState.impact;
+                AttackState = AttackStates.impact;
                 //攻击生效
                 EnableHitBox(attackList[comboCount]);
                 //播放音效
                 AudioManager.Instance.Play(attackList[comboCount].name);
             }
-            if (attackState == AttackState.impact && normalizedTime >= attackList[comboCount].EndTime)
+            if (AttackState == AttackStates.impact && normalizedTime >= attackList[comboCount].EndTime)
             {
-                attackState = AttackState.end;
+                AttackState = AttackStates.end;
                 //结束攻击
                 DisableAllHitBox();
             }
-            else if (attackState == AttackState.end)
+            else if (AttackState == AttackStates.end)
             {
                 if (doCombo)
                 {
@@ -89,7 +89,7 @@ public class MeeleFighter : MonoBehaviour
             yield return null;
         }
 
-        attackState = AttackState.none;//重置攻击状态
+        AttackState = AttackStates.none;//重置攻击状态
         comboCount = 0;
         InAction = false;
     }

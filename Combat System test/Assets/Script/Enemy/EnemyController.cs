@@ -26,23 +26,40 @@ public class EnemyController : MonoBehaviour
 
     public NavMeshAgent NavMeshAgent { get; private set; }
     public Animator Animator { get; private set; }
+    //敌人自己的MeeleFighter组件
+    public MeeleFighter EnemyItSelf { get; private set; }
+    public float stayingCombatTime{ get; set; } = 0;
     private void Start()
     {
         //获取Animator组件
         Animator = GetComponent<Animator>();
         //获取NavMeshAgent组件
         NavMeshAgent = GetComponent<NavMeshAgent>();
+        //获取MeeleFighter组件
+        EnemyItSelf = GetComponent<MeeleFighter>();
 
         //创建enemy状态字典并添加状态
         stateDict = new Dictionary<EnemyState, State<EnemyController>>();
         stateDict[EnemyState.Idle] = GetComponent<IdleState>();
         stateDict[EnemyState.CombatMove] = GetComponent<CombatMoveState>();
+        stateDict[EnemyState.Attack] = GetComponent<AttackState>();
 
         //创建enemy状态机并切换到Idle状态
         stateMachine = new StateMachine<EnemyController>(this);
         stateMachine.ChangeState(stateDict[EnemyState.Idle]);
     }
 
+    //判断当前状态是否是某个状态
+    public bool IsInState(EnemyState state)
+    {
+        if (stateMachine.CurrentState == stateDict[state])
+        {
+            return true;
+        }
+        return false;
+    }
+
+    //切换状态
     public void ChangeState(EnemyState state)
     {
         stateMachine.ChangeState(stateDict[state]);
