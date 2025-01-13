@@ -31,6 +31,7 @@ public class EnemyController : MonoBehaviour
     public MeeleFighter EnemyItSelf { get; private set; }
     public float stayingCombatTime { get; set; } = 0;
     public VisionSensor visionSensor { get;  set; }
+    public CharacterController CharacterController { get; set; }
     private void Start()
     {
         //获取Animator组件
@@ -39,6 +40,8 @@ public class EnemyController : MonoBehaviour
         NavMeshAgent = GetComponent<NavMeshAgent>();
         //获取MeeleFighter组件
         EnemyItSelf = GetComponent<MeeleFighter>();
+        //获取CharacterController组件
+        CharacterController = GetComponent<CharacterController>();
 
         //创建enemy状态字典并添加状态
         stateDict = new Dictionary<EnemyState, State<EnemyController>>();

@@ -753,23 +753,23 @@ MonoBehaviour:
   audioDataList:
   - name: slash01
     clip: {fileID: 8300000, guid: 935aa09a6816ff64593eb706f9343f6a, type: 3}
-    defaultVolume: 0.5
+    defaultVolume: 0.2
     group: 
   - name: slash02
     clip: {fileID: 8300000, guid: da34f8f64944f5f4ba6c58d5b9b121f3, type: 3}
-    defaultVolume: 0.5
+    defaultVolume: 0.2
     group: 
   - name: slash03
     clip: {fileID: 8300000, guid: b9f3d3d95a1117943a0cb06d821fc6a3, type: 3}
-    defaultVolume: 0.5
+    defaultVolume: 0.2
     group: 
   - name: slash04
     clip: {fileID: 8300000, guid: 7f712dafdc197cb4bb733002cd1d5ea0, type: 3}
-    defaultVolume: 0.5
+    defaultVolume: 0.2
     group: 
-  - name: slash05
-    clip: {fileID: 8300000, guid: d33f5335ba4ca504ba77b1aee9520b8a, type: 3}
-    defaultVolume: 0.5
+  - name: kick
+    clip: {fileID: 8300000, guid: a9fe83366307d414ea5aec26a348f3ea, type: 3}
+    defaultVolume: 0.2
     group: 
   - name: armorSound
     clip: {fileID: 8300000, guid: f6b9ebba631029547825bb26fd92677f, type: 3}
@@ -1482,6 +1482,10 @@ PrefabInstance:
     - target: {fileID: 3988877576422845870, guid: cb03b0dd14f2fac498af84370ef1b9a8, type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 6230620560096295712, guid: cb03b0dd14f2fac498af84370ef1b9a8, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7344878821915431971, guid: cb03b0dd14f2fac498af84370ef1b9a8, type: 3}
       propertyPath: target

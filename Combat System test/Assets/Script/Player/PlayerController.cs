@@ -37,13 +37,14 @@ public class PlayerController : MonoBehaviour
     {
         if (meeleFighter.InAction)
         {
+            targetRotation = transform.rotation;
             animator.SetFloat("moveAmount", 0);
             return;
         }
 
         float h = Input.GetAxis("Horizontal");
         float v = Input.GetAxis("Vertical");
-        var moveInput = (new Vector3(h, 0, v)).normalized;//归一化防止对角线方向移动速度更快
+        var moveInput = new Vector3(h, 0, v).normalized;//归一化防止对角线方向移动速度更快
 
         var moveDir = cameraController.PlaneRotation * moveInput;
         float moveAmount = Mathf.Clamp01(Mathf.Abs(h) + Mathf.Abs(v));

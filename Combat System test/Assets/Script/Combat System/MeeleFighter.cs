@@ -62,7 +62,7 @@ public class MeeleFighter : MonoBehaviour
             float normalizedTime = timer / animState.length;
 
             if (InCounter) break;//TODO:这里有问题
-            
+
             if (AttackState == AttackStates.start && normalizedTime >= attackList[comboCount].StartTime)
             {
                 if (InCounter) break;//TODO:这里有问题
@@ -123,21 +123,33 @@ public class MeeleFighter : MonoBehaviour
         InCounter = true;
         enemy.EnemyItSelf.InCounter = true;
         enemy.ChangeState(EnemyState.Dead);
-    
+
         var dispVec = enemy.transform.position - transform.position;
         dispVec.y = 0;
         transform.rotation = Quaternion.LookRotation(dispVec);//面向敌人方向
         enemy.transform.rotation = Quaternion.LookRotation(-dispVec);//敌人面向玩家方向
+        
+        // 计算目标位置，稍微靠近敌人
+        var targetPos = enemy.transform.position - dispVec.normalized * 1.5f;
+
 
         //占用当前动画的20%时间过渡，必须保证前一个动画的时间不能太长
         animator.CrossFade("CounterAttack", 0.2f);
+        AudioManager.Instance.Play("kick");
         enemy.Animator.CrossFade("Death", 0.2f);
 
         yield return null;//等待一帧，保证接下来的动画处于过渡阶段
         //获取下一个动画的信息(也就是受击动画)
         var animState = animator.GetNextAnimatorStateInfo(1);
-        yield return new WaitForSeconds(animState.length * 0.6f);
 
+        float timer = 0f;
+        while (timer <= animState.length)
+        {
+            transform.position = Vector3.MoveTowards(transform.position, targetPos, 4f * Time.deltaTime);
+            yield return null;
+            timer += Time.deltaTime;
+
+        }
 
         enemy.EnemyItSelf.InCounter = false;
         InCounter = false;

@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -57,20 +58,22 @@ public class AudioManager : MonoBehaviour
 
     private void Start()
     {
-        PreloadAudio(); // 预加载音频数据
+        StartCoroutine(PreloadAudioAsync()); // 异步预加载音频数据
+        OnValidate();
+        // PreloadAudio(); // 预加载音频数据
     }
 
-    private void PreloadAudio()
-    {
-        foreach (var data in audioDataList)
-        {
-            AudioClip preloadClip = data.clip;
-            if (preloadClip.loadState != AudioDataLoadState.Loaded)
-            {
-                preloadClip.LoadAudioData();
-            }
-        }
-    }
+    // private void PreloadAudio()
+    // {
+    //     foreach (var data in audioDataList)
+    //     {
+    //         AudioClip preloadClip = data.clip;
+    //         if (preloadClip.loadState != AudioDataLoadState.Loaded)
+    //         {
+    //             preloadClip.LoadAudioData();
+    //         }
+    //     }
+    // }
 
     // 播放音效
     public void Play(string audioName)
@@ -138,6 +141,7 @@ public class AudioManager : MonoBehaviour
         }
     }
 
+
     // 当面板数据变化时自动更新音量
     private void OnValidate()
     {
@@ -152,4 +156,19 @@ public class AudioManager : MonoBehaviour
             }
         }
     }
+
+    private IEnumerator PreloadAudioAsync()
+{
+    foreach (var data in audioDataList)
+    {
+        AudioClip preloadClip = data.clip;
+        if (preloadClip.loadState != AudioDataLoadState.Loaded)
+        {
+            preloadClip.LoadAudioData();
+        }
+        yield return null; // 每帧加载一个
+    }
+}
+
+
 }
