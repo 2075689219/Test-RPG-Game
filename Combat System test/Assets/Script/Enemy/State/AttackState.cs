@@ -32,8 +32,10 @@ public class AttackState : State<EnemyController>
             StartCoroutine(Attack());
         }
     }
+    
     public override void Exit()
     {
+        //调用 ResetPath() 是一种清理操作，让敌人不再受之前路径的干扰。
         enemy.NavMeshAgent.ResetPath();
     }
 
@@ -43,9 +45,12 @@ public class AttackState : State<EnemyController>
         enemy.Animator.applyRootMotion = true;//攻击时启用root motion
         enemy.EnemyItSelf.TryToAttack();
 
+        //等待攻击动画播放完毕
         yield return new WaitUntil(() => enemy.EnemyItSelf.AttackState == AttackStates.none);
 
         enemy.Animator.applyRootMotion = false;//攻击结束后关闭root motion
         isAttacking = false;
+
+        enemy.ChangeState(EnemyState.RetreatAfterAttackState);//攻击完成后切换到后退状态
     }
 }

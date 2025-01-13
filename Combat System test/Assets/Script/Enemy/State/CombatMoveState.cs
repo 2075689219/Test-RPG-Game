@@ -13,7 +13,7 @@ public enum AICombatState
 public class CombatMoveState : State<EnemyController>
 {
     [SerializeField] float circlingSpeed = 20f;
-    [SerializeField] float StopChaseDistance = 6f;
+    [SerializeField] float stopChaseDistance = 6f;
     [SerializeField] float 调整距离阈值 = 1f;//确保敌人对于玩家的移动不会太敏感
     [SerializeField] Vector2 idleTimeRange = new Vector2(2, 5);//idle状态持续时间
     [SerializeField] Vector2 circlingTimeRange = new Vector2(1, 3);//idle状态持续时间
@@ -25,7 +25,7 @@ public class CombatMoveState : State<EnemyController>
     public override void Enter(EnemyController owner)
     {
         enemy = owner;
-        enemy.NavMeshAgent.stoppingDistance = StopChaseDistance;
+        enemy.NavMeshAgent.stoppingDistance = stopChaseDistance;
         enemy.stayingCombatTime = 0;
     }
 
@@ -34,7 +34,7 @@ public class CombatMoveState : State<EnemyController>
         //enemy和player之间的距离
         var distance = Vector3.Distance(enemy.Target.transform.position, enemy.transform.position);
 
-        if (distance > StopChaseDistance + 调整距离阈值)
+        if (distance > stopChaseDistance + 调整距离阈值)
         {
             StartChase();
         }
@@ -56,7 +56,7 @@ public class CombatMoveState : State<EnemyController>
         }
         else if (State == AICombatState.Chase)
         {
-            if (distance <= StopChaseDistance + 0.05f)
+            if (distance <= stopChaseDistance + 0.05f)
             {
                 StartIdle();
                 return;

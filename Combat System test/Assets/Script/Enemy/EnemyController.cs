@@ -8,6 +8,7 @@ public enum EnemyState//敌人状态
     Idle,
     CombatMove,
     Attack,
+    RetreatAfterAttackState,
     Dead
 }
 
@@ -28,7 +29,7 @@ public class EnemyController : MonoBehaviour
     public Animator Animator { get; private set; }
     //敌人自己的MeeleFighter组件
     public MeeleFighter EnemyItSelf { get; private set; }
-    public float stayingCombatTime{ get; set; } = 0;
+    public float stayingCombatTime { get; set; } = 0;
     private void Start()
     {
         //获取Animator组件
@@ -43,6 +44,7 @@ public class EnemyController : MonoBehaviour
         stateDict[EnemyState.Idle] = GetComponent<IdleState>();
         stateDict[EnemyState.CombatMove] = GetComponent<CombatMoveState>();
         stateDict[EnemyState.Attack] = GetComponent<AttackState>();
+        stateDict[EnemyState.RetreatAfterAttackState] = GetComponent<RetreatAfterAttackState>();
 
         //创建enemy状态机并切换到Idle状态
         stateMachine = new StateMachine<EnemyController>(this);
@@ -65,6 +67,8 @@ public class EnemyController : MonoBehaviour
         stateMachine.ChangeState(stateDict[state]);
     }
     Vector3 prePos;
+
+    
     private void Update()
     {
         //执行状态机
@@ -75,6 +79,11 @@ public class EnemyController : MonoBehaviour
 
         float forwardSpeed = Vector3.Dot(transform.forward, velocity); //计算前向速度 
         float forwardSpeedPercent = forwardSpeed / NavMeshAgent.speed;//速度百分比
+        ////////////////TODO：传入的值是否是负数/////////////////////////////
+        if (IsInState(EnemyState.RetreatAfterAttackState))
+        {
+            forwardSpeedPercent = -Mathf.Abs(forwardSpeedPercent);
+        }
         Animator.SetFloat("forwardSpeed", forwardSpeedPercent, 0.2f, Time.deltaTime);
 
         float angle = Vector3.SignedAngle(transform.forward, velocity, Vector3.up);
