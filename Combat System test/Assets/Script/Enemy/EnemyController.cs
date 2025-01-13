@@ -79,11 +79,12 @@ public class EnemyController : MonoBehaviour
 
         float forwardSpeed = Vector3.Dot(transform.forward, velocity); //计算前向速度 
         float forwardSpeedPercent = forwardSpeed / NavMeshAgent.speed;//速度百分比
-        ////////////////TODO：传入的值是否是负数/////////////////////////////
+        ////////////////处于后退状态则将forwadSpeed速度改为负数/////////////////////////////
         if (IsInState(EnemyState.RetreatAfterAttackState))
         {
             forwardSpeedPercent = -Mathf.Abs(forwardSpeedPercent);
         }
+        /////////////////////////////////////////////////////////////////////////////////
         Animator.SetFloat("forwardSpeed", forwardSpeedPercent, 0.2f, Time.deltaTime);
 
         float angle = Vector3.SignedAngle(transform.forward, velocity, Vector3.up);

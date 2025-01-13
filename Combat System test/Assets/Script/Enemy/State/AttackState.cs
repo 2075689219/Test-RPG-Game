@@ -29,21 +29,28 @@ public class AttackState : State<EnemyController>
         //当player在attackDistance范围内时，敌人攻击
         if (distance <= attackDistance + 0.05f)
         {
-            StartCoroutine(Attack());
+            StartCoroutine(Attack(Random.Range(0, enemy.EnemyItSelf.AttackList.Count + 1)));
         }
     }
-    
+
     public override void Exit()
     {
         //调用 ResetPath() 是一种清理操作，让敌人不再受之前路径的干扰。
         enemy.NavMeshAgent.ResetPath();
     }
 
-    IEnumerator Attack()
+    IEnumerator Attack(int comboCount = 1)
     {
         isAttacking = true;
         enemy.Animator.applyRootMotion = true;//攻击时启用root motion
         enemy.EnemyItSelf.TryToAttack();
+
+        for (int i = 1; i <= comboCount; i++)
+        {
+            yield return new WaitUntil(() => enemy.EnemyItSelf.AttackState == AttackStates.end);
+            enemy.EnemyItSelf.TryToAttack();
+
+        }
 
         //等待攻击动画播放完毕
         yield return new WaitUntil(() => enemy.EnemyItSelf.AttackState == AttackStates.none);

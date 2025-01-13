@@ -1268,7 +1268,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2107730191395860858, guid: 7ab785ed7f727a94f9e25dee6283bc53, type: 3}
       propertyPath: attackDistance
-      value: 2.5
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 2695152974210141652, guid: 7ab785ed7f727a94f9e25dee6283bc53, type: 3}
       propertyPath: m_Name
@@ -1502,7 +1502,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2107730191395860858, guid: 7ab785ed7f727a94f9e25dee6283bc53, type: 3}
       propertyPath: attackDistance
-      value: 2.5
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 2695152974210141652, guid: 7ab785ed7f727a94f9e25dee6283bc53, type: 3}
       propertyPath: m_Name

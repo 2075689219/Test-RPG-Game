@@ -129,4 +129,6 @@ public class MeeleFighter : MonoBehaviour
     {
         weaponCollider.enabled = false;
     }
+
+    public List<AttackData> AttackList => attackList;
 }
