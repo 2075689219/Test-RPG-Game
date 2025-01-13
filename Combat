@@ -1,0 +1,21 @@
+public IEnumerator HandleCounterAttack(bool isDamaged)
+{
+    // 停止当前的行为
+    stateMachine.ChangeState(null);
+
+    // 播放相应的动画
+    if (isDamaged)
+    {
+        Animator.CrossFade("Damage", 0.2f);
+    }
+    else
+    {
+        Animator.CrossFade("Dodge", 0.2f);
+    }
+
+    // 等待动画播放完成
+    yield return new WaitForSeconds(Animator.GetCurrentAnimatorStateInfo(0).length);
+
+    // 进入RetreatAfterAttackState
+    ChangeState(EnemyState.RetreatAfterAttackState);
+}

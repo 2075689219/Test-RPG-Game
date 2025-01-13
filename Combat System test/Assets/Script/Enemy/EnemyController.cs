@@ -30,6 +30,7 @@ public class EnemyController : MonoBehaviour
     //敌人自己的MeeleFighter组件
     public MeeleFighter EnemyItSelf { get; private set; }
     public float stayingCombatTime { get; set; } = 0;
+    public VisionSensor visionSensor { get;  set; }
     private void Start()
     {
         //获取Animator组件
@@ -45,6 +46,7 @@ public class EnemyController : MonoBehaviour
         stateDict[EnemyState.CombatMove] = GetComponent<CombatMoveState>();
         stateDict[EnemyState.Attack] = GetComponent<AttackState>();
         stateDict[EnemyState.RetreatAfterAttackState] = GetComponent<RetreatAfterAttackState>();
+        stateDict[EnemyState.Dead] = GetComponent<DeadState>();
 
         //创建enemy状态机并切换到Idle状态
         stateMachine = new StateMachine<EnemyController>(this);
@@ -68,7 +70,7 @@ public class EnemyController : MonoBehaviour
     }
     Vector3 prePos;
 
-    
+
     private void Update()
     {
         //执行状态机
@@ -95,8 +97,20 @@ public class EnemyController : MonoBehaviour
     }
 
 
-
-
+    // 刷新目标
+    public void RefreshTarget()
+    {
+        // 实现刷新目标的逻辑
+        // 例如，选择最近的目标作为新的 Target
+        if (TargetsInRange.Count > 0)
+        {
+            Target = TargetsInRange[0]; // 简单示例，选择第一个目标
+        }
+        else
+        {
+            Target = null;
+        }
+    }
 
 
 }

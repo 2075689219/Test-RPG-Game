@@ -61,4 +61,9 @@ public class EnemyManager : MonoBehaviour
         return enemiesInRange.OrderByDescending(e => e.stayingCombatTime).FirstOrDefault();
     }
 
-}
+    public EnemyController GetAttackingEnemy()
+    {
+        return enemiesInRange.FirstOrDefault(e => e.IsInState(EnemyState.Attack));
+    }
+
+}   

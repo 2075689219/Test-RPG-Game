@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 7374f37349a108a48aee0de44668bf12
+guid: 03e53ae4d46160b4cb713839108f3aed
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable:
@@ -467,7 +467,7 @@ ModelImporter:
     second: z4 hair LOD0
   - first:
       74: 7400000
-    second: ZombieSkeleton_OneHanded_Damage
+    second: ZombieSkeleton_OneHanded_Death
   - first:
       95: 9500000
     second: //RootNode
@@ -503,7 +503,11 @@ ModelImporter:
     removeConstantScaleCurves: 0
     motionNodeName: 
     animationImportErrors: 
-    animationImportWarnings: 
+    animationImportWarnings: "\nClip 'Take 001' has import animation warnings that
+      might lower retargeting quality:\nNote: Activate translation DOF on avatar
+      to improve retargeting quality.\n\t'CATRigHub003Bone001' has translation animation
+      that will be discarded.\n\t'CATRigRArmDigit13' has scale animation that will
+      be discarded.\n"
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0
@@ -517,11 +521,11 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: ZombieSkeleton_OneHanded_Damage
+      name: ZombieSkeleton_OneHanded_Death
       takeName: Take 001
       internalID: 0
       firstFrame: 0
-      lastFrame: 170
+      lastFrame: 100
       wrapMode: 0
       orientationOffsetY: 0
       level: 0

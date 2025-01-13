@@ -9,6 +9,7 @@ public class VisionSensor : MonoBehaviour
 
     private void Awake()
     {
+        enemy.visionSensor = this;
         sphereCollider = GetComponent<SphereCollider>();
         if (sphereCollider == null)
         {

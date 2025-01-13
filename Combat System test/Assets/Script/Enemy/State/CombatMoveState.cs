@@ -20,17 +20,21 @@ public class CombatMoveState : State<EnemyController>
     AICombatState State;//当前状态
     EnemyController enemy;
 
-    float timer = 0;
+    public float timer = 0;
     int circlingDirection = 1;//1为左，-1为右
     public override void Enter(EnemyController owner)
     {
         enemy = owner;
         enemy.NavMeshAgent.stoppingDistance = stopChaseDistance;
+        timer = Random.Range(idleTimeRange.x, idleTimeRange.y);
         enemy.stayingCombatTime = 0;
     }
 
     public override void Execute()
     {
+        if (enemy.Target == null) return;
+
+        timer -= Time.deltaTime;
         //enemy和player之间的距离
         var distance = Vector3.Distance(enemy.Target.transform.position, enemy.transform.position);
 

@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 75da827a92184f38bebba76e7f8d6622
+guid: 9acc42d0553df524daa5382b5df3095b
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable:
@@ -8,7 +8,7 @@ ModelImporter:
     second: hit_knockdown_01
   externalObjects: {}
   materials:
-    materialImportMode: 2
+    materialImportMode: 0
     materialName: 0
     materialSearch: 1
     materialLocation: 1
@@ -17,7 +17,7 @@ ModelImporter:
     bakeSimulation: 0
     resampleCurves: 1
     optimizeGameObjects: 0
-    removeConstantScaleCurves: 0
+    removeConstantScaleCurves: 1
     motionNodeName: 
     animationImportErrors: 
     animationImportWarnings: 
@@ -48,7 +48,7 @@ ModelImporter:
       loopTime: 0
       loopBlend: 0
       loopBlendOrientation: 1
-      loopBlendPositionY: 1
+      loopBlendPositionY: 0
       loopBlendPositionXZ: 0
       keepOriginalOrientation: 1
       keepOriginalPositionY: 1

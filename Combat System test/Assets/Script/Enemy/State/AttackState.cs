@@ -11,6 +11,10 @@ public class AttackState : State<EnemyController>
     {
         enemy = owner;
 
+        // 停止Circling相关逻辑
+        enemy.NavMeshAgent.isStopped = true;
+        enemy.NavMeshAgent.ResetPath();
+
         enemy.NavMeshAgent.stoppingDistance = attackDistance;
     }
     public override void Execute()
@@ -58,6 +62,8 @@ public class AttackState : State<EnemyController>
         enemy.Animator.applyRootMotion = false;//攻击结束后关闭root motion
         isAttacking = false;
 
+        //只有处于攻击状态时才能切换到后退状态，确保在其他状态下不会切换到后退状态
+        if(enemy.IsInState(EnemyState.Attack))
         enemy.ChangeState(EnemyState.RetreatAfterAttackState);//攻击完成后切换到后退状态
     }
 }

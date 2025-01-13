@@ -17,6 +17,7 @@ public class StateMachine<T>
         CurrentState?.Exit();//如果当前状态不为空，就退出当前状态
         CurrentState = newState;
         CurrentState.Enter(_owner);
+
     }
     public void Execute()
     {
