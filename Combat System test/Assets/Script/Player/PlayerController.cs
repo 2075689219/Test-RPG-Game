@@ -17,10 +17,16 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float soundInterval = 22f; // 音效播放间隔
     private float soundTimer = 0f; // 音效计时器
     Quaternion targetRotation;
-    CameraController cameraController;
+    [SerializeField] CameraController cameraController;
     Animator animator;
     CharacterController characterController;
     MeeleFighter meeleFighter;
+    CombatController combatController;
+    [Header("BGM设置")]
+    [SerializeField] private float fadeDuration = 2f; // 渐入渐出的时间
+    private float combatBGMMinTime = 30f; // combatBGM 最小播放时间
+    private float combatBGMTimer = 0f; // combatBGM 计时器
+    private bool isCombatBGMPlaying = false; // 当前是否播放 combatBGM
 
     bool isGrounded = false;
     float ySpeed = 0f;
@@ -31,10 +37,23 @@ public class PlayerController : MonoBehaviour
         animator = GetComponent<Animator>();
         characterController = GetComponent<CharacterController>();
         meeleFighter = GetComponent<MeeleFighter>();
+        combatController = GetComponent<CombatController>();
+
+
+        // 初始化 CombatMode 为 false
+        if (combatController != null)
+        {
+            combatController.CombatMode = false;
+        }
+        else
+        {
+            Debug.LogError("CombatController is not assigned or missing.");
+        }
     }
 
     private void Update()
     {
+
         if (meeleFighter.InAction)
         {
             targetRotation = transform.rotation;
@@ -49,6 +68,9 @@ public class PlayerController : MonoBehaviour
         var moveDir = cameraController.PlaneRotation * moveInput;
         float moveAmount = Mathf.Clamp01(Mathf.Abs(h) + Mathf.Abs(v));
 
+        // 如果处于 CombatMode，则将移动速度降低为原来的 40%
+        float adjustedMoveSpeed = combatController.CombatMode ? moveSpeed * 0.4f : moveSpeed;
+
         //检测是否处于地面，设置y轴速度
         GroundCheck();
         if (isGrounded)
@@ -59,26 +81,106 @@ public class PlayerController : MonoBehaviour
         {
             ySpeed += Physics.gravity.y * Time.deltaTime;
         }
-        var velocity = moveDir * moveSpeed;
-        velocity.y = ySpeed;
 
+        var velocity = moveDir * moveSpeed;
+
+        if (combatController.CombatMode)
+        {
+            var targetVec = combatController.TargetEnemy.transform.position - transform.position;
+            targetVec.y = 0;
+
+            if (moveAmount > 0f)
+            {
+                targetRotation = Quaternion.LookRotation(targetVec);
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotateSpeed * Time.deltaTime);
+                PlayArmorSound(moveAmount);//播放盔甲声
+            }
+
+            velocity /= 3;
+            animator.SetFloat("forwardSpeed", Vector3.Dot(transform.forward, velocity) / moveSpeed, 0.2f, Time.deltaTime);
+            animator.SetFloat("strafeSpeed", Mathf.Sin(Vector3.SignedAngle(transform.forward, velocity, Vector3.up) * Mathf.Deg2Rad), 0.2f, Time.deltaTime);
+        }
+        else
+        {
+            if (moveAmount > 0f)
+            {
+                targetRotation = Quaternion.LookRotation(moveDir);//转向
+                PlayArmorSound(moveAmount);//播放盔甲声
+            }
+            //平滑旋转
+            transform.rotation = Quaternion.RotateTowards(transform.rotation,
+            targetRotation, rotateSpeed * Time.deltaTime);
+
+            animator.SetFloat("forwardSpeed", moveAmount, 0.25f, Time.deltaTime);
+
+        }
+
+        velocity.y = ySpeed;
         //实现移动和转向
         characterController.Move(velocity * Time.deltaTime);
-        if (moveAmount > 0f)
+
+        //BGM设置
+        AudioManager.Instance.SetVolume("combatBGM",0.3f);
+        AudioManager.Instance.SetVolume("normalBGM",0.3f);
+        if (combatController.CombatMode)
         {
-            targetRotation = Quaternion.LookRotation(moveDir);//转向
+            combatBGMTimer += Time.deltaTime;
+
+            if (!isCombatBGMPlaying)
+            {
+                StartCoroutine(SwitchBGM("combatBGM", "normalBGM", true));
+                isCombatBGMPlaying = true;
+            }
         }
-        //平滑旋转
-        transform.rotation = Quaternion.RotateTowards(transform.rotation,
-        targetRotation, rotateSpeed * Time.deltaTime);
+        else
+        {
+            combatBGMTimer += Time.deltaTime;
 
-        animator.SetFloat("moveAmount", moveAmount, 0.25f, Time.deltaTime);
-
-        //播放盔甲声
-        PlayArmorSound(moveAmount);
+            if (isCombatBGMPlaying && combatBGMTimer >= combatBGMMinTime)
+            {
+                StartCoroutine(SwitchBGM("normalBGM", "combatBGM", false));
+                isCombatBGMPlaying = false;
+                combatBGMTimer = 0f; // 重置计时器
+            }
+        }
     }
 
+    private IEnumerator SwitchBGM(string targetBGM, string currentBGM, bool isEnteringCombat)
+    {
+        // 获取当前播放的 AudioSource
+        AudioSource currentSource = AudioManager.Instance.GetAudioSource(currentBGM);
+        AudioSource targetSource = AudioManager.Instance.GetAudioSource(targetBGM);
 
+        // 如果目标音乐已经在播放，直接退出
+        if (targetSource != null && targetSource.isPlaying)
+        {
+            yield break;
+        }
+
+        // 渐出当前音乐
+        if (currentSource != null && currentSource.isPlaying)
+        {
+            while (currentSource.volume > 0)
+            {
+                currentSource.volume -= Time.deltaTime / fadeDuration;
+                yield return null;
+            }
+            currentSource.Stop();
+        }
+
+        // 渐入目标音乐
+        if (targetSource != null)
+        {
+            targetSource.volume = 0;
+            targetSource.Play();
+
+            while (targetSource.volume < 1)
+            {
+                targetSource.volume += Time.deltaTime / fadeDuration;
+                yield return null;
+            }
+        }
+    }
 
     //地面检测
     void GroundCheck()
@@ -101,6 +203,8 @@ public class PlayerController : MonoBehaviour
             AudioManager.Instance.Stop("armorSound"); // 停止盔甲音效
         }
     }
+
+
 
     //unity编辑器中绘制Gizmos，方便观察GroundCheck
     private void OnDrawGizmosSelected()

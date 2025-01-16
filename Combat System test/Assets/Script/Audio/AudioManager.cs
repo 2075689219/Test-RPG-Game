@@ -9,6 +9,7 @@ public struct AudioData
     public AudioClip clip;     // 对应的音频文件
     public float defaultVolume; // 默认音量
     public string group;       // 分组名称（可选）
+    public bool loop;           // 是否循环播放
 }
 
 public class AudioManager : MonoBehaviour
@@ -40,9 +41,11 @@ public class AudioManager : MonoBehaviour
         {
             AudioSource source = gameObject.AddComponent<AudioSource>();
             source.clip = data.clip;
-            source.volume = data.defaultVolume > 0 ? data.defaultVolume : 1f; // 如果未设置，默认音量为 1
+            source.volume = Mathf.Clamp01(data.defaultVolume); // 确保使用默认音量
+            source.loop = data.loop; // 根据 AudioData 的设置确定是否循环播放
             source.spatialBlend = 0f; // 默认2D音效
             audioSources.Add(data.name, source);
+
 
             // 添加到对应的分组
             if (!string.IsNullOrEmpty(data.group))
@@ -158,17 +161,65 @@ public class AudioManager : MonoBehaviour
     }
 
     private IEnumerator PreloadAudioAsync()
-{
-    foreach (var data in audioDataList)
     {
-        AudioClip preloadClip = data.clip;
-        if (preloadClip.loadState != AudioDataLoadState.Loaded)
+        foreach (var data in audioDataList)
         {
-            preloadClip.LoadAudioData();
+            AudioClip preloadClip = data.clip;
+            if (preloadClip.loadState != AudioDataLoadState.Loaded)
+            {
+                preloadClip.LoadAudioData();
+            }
+            yield return null; // 每帧加载一个
         }
-        yield return null; // 每帧加载一个
     }
-}
+    /// <summary>
+    /// 播放音频并设置为循环播放。
+    /// </summary>
+    /// <param name="audioName">音效名称</param>
+    public void PlayLoop(string audioName)
+    {
+        if (audioSources.TryGetValue(audioName, out AudioSource source))
+        {
+            source.loop = true; // 启用循环播放
+            if (!source.isPlaying) // 确保未播放时才开始播放
+            {
+                source.Play();
+            }
+        }
+        else
+        {
+            Debug.LogWarning($"Audio with name {audioName} not found!");
+        }
+    }
 
+    /// <summary>
+    /// 停止音频播放并关闭循环模式。
+    /// </summary>
+    /// <param name="audioName">音效名称</param>
+    public void StopLoop(string audioName)
+    {
+        if (audioSources.TryGetValue(audioName, out AudioSource source))
+        {
+            source.loop = false; // 关闭循环播放
+            source.Stop();
+        }
+        else
+        {
+            Debug.LogWarning($"Audio with name {audioName} not found!");
+        }
+    }
 
+    public AudioSource GetAudioSource(string soundName)
+    {
+        if (audioSources.ContainsKey(soundName))
+        {
+            return audioSources[soundName];
+        }
+        return null;
+    }
+
+    internal void PlayL(string v)
+    {
+        throw new System.NotImplementedException();
+    }
 }

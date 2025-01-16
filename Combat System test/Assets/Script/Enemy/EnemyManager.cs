@@ -1,11 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 
 public class EnemyManager : MonoBehaviour
 {
-    [SerializeField] Vector2 attackIntervalRange = new Vector2(2,5 );
+    [SerializeField] Vector2 attackIntervalRange = new Vector2(2, 5);
+    [SerializeField] CombatController player;
+    EnemyController lastHighlightedEnemy; // 记录上一次发光的敌人
     public static EnemyManager instance { get; private set; }
     private void Awake()
     {
@@ -29,9 +32,13 @@ public class EnemyManager : MonoBehaviour
         if (enemiesInRange.Contains(enemy))
         {
             enemiesInRange.Remove(enemy);
+
+            if(enemy == player.TargetEnemy)
+            enemy.DisableHighlight();
         }
     }
 
+    float timer = 0;
     private void Update()
     {
         if (enemiesInRange.Count == 0) return;
@@ -55,6 +62,37 @@ public class EnemyManager : MonoBehaviour
                 AttackTimeInterval = Random.Range(attackIntervalRange.x, attackIntervalRange.y);
             }
         }
+
+        if (timer >= 0.1f)
+        {
+            var closestEnemy = GetClosestEnemyToPlayerDir();
+
+            if (closestEnemy != lastHighlightedEnemy)
+            {
+                // 禁用上一个敌人的发光效果
+                if (lastHighlightedEnemy != null)
+                {
+                    lastHighlightedEnemy.DisableHighlight();
+                }
+
+                // 启用当前选中敌人的发光效果
+                if (closestEnemy != null)
+                {
+                    closestEnemy.EnableHighlight();
+                }
+
+                // 更新记录
+                lastHighlightedEnemy = closestEnemy;
+            }
+
+            player.TargetEnemy = closestEnemy;
+            timer = 0;
+        }
+        else
+        {
+            timer += Time.deltaTime;
+        }
+
     }
     EnemyController SelectEnemyToAttack()
     {
@@ -66,4 +104,26 @@ public class EnemyManager : MonoBehaviour
         return enemiesInRange.FirstOrDefault(e => e.IsInState(EnemyState.Attack));
     }
 
-}   
+    public EnemyController GetClosestEnemyToPlayerDir()
+    {
+        var targetingDir = player.GetTargetingDirection();
+        float minDistance = float.MaxValue;
+        EnemyController closestEnemy = null;
+
+        foreach (var enemy in enemiesInRange)
+        {
+            var vectToEnemy = enemy.transform.position - player.transform.position;
+            vectToEnemy.y = 0;
+            float angle = Vector3.Angle(targetingDir, vectToEnemy.normalized);
+            float distance = vectToEnemy.magnitude * Mathf.Sin(angle * Mathf.Deg2Rad);
+
+            if (distance < minDistance)
+            {
+                minDistance = distance;
+                closestEnemy = enemy;
+            }
+
+        }
+        return closestEnemy;
+    }
+}

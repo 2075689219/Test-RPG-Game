@@ -298,6 +298,17 @@ Transform:
   m_Children: []
   m_Father: {fileID: 248046165}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &357154305 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1753321033340067134, guid: cb03b0dd14f2fac498af84370ef1b9a8, type: 3}
+  m_PrefabInstance: {fileID: 5713919894450989871}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f808cac066559e4fa4fea62af312c4c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &559406640 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1781949194303238865, guid: 4e35892e4c5444340a0e2189311808e5, type: 3}
@@ -418,135 +429,6 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0.99, z: 0}
---- !u!1 &621895035
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 621895037}
-  - component: {fileID: 621895038}
-  m_Layer: 0
-  m_Name: BGM
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &621895037
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 621895035}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.28019696, y: 0.6592159, z: -0.3136797}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!82 &621895038
-AudioSource:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 621895035}
-  m_Enabled: 1
-  serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 79da936525bb87a4789aa8e3d91b7c92, type: 3}
-  m_Resource: {fileID: 8300000, guid: 79da936525bb87a4789aa8e3d91b7c92, type: 3}
-  m_PlayOnAwake: 1
-  m_Volume: 0.126
-  m_Pitch: 1
-  Loop: 1
-  Mute: 0
-  Spatialize: 0
-  SpatializePostEffects: 0
-  Priority: 128
-  DopplerLevel: 1
-  MinDistance: 1
-  MaxDistance: 500
-  Pan2D: 0
-  rolloffMode: 0
-  BypassEffects: 0
-  BypassListenerEffects: 0
-  BypassReverbZones: 0
-  rolloffCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  panLevelCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  spreadCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  reverbZoneMixCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
 --- !u!1001 &681522627
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -755,54 +637,77 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: 935aa09a6816ff64593eb706f9343f6a, type: 3}
     defaultVolume: 0.2
     group: 
+    loop: 0
   - name: slash02
     clip: {fileID: 8300000, guid: da34f8f64944f5f4ba6c58d5b9b121f3, type: 3}
     defaultVolume: 0.2
     group: 
+    loop: 0
   - name: slash03
     clip: {fileID: 8300000, guid: b9f3d3d95a1117943a0cb06d821fc6a3, type: 3}
     defaultVolume: 0.2
     group: 
+    loop: 0
   - name: slash04
     clip: {fileID: 8300000, guid: 7f712dafdc197cb4bb733002cd1d5ea0, type: 3}
     defaultVolume: 0.2
     group: 
+    loop: 0
   - name: kick
     clip: {fileID: 8300000, guid: a9fe83366307d414ea5aec26a348f3ea, type: 3}
     defaultVolume: 0.2
     group: 
+    loop: 0
   - name: armorSound
     clip: {fileID: 8300000, guid: f6b9ebba631029547825bb26fd92677f, type: 3}
     defaultVolume: 1
     group: 
+    loop: 0
   - name: foot01
     clip: {fileID: 8300000, guid: 47832b56ccba5bc408b1d5aac1871746, type: 3}
     defaultVolume: 20
     group: Footstep
+    loop: 0
   - name: foot02
     clip: {fileID: 8300000, guid: 3d132da7af60f1145a3deb6a8bc42a08, type: 3}
     defaultVolume: 20
     group: Footstep
+    loop: 0
   - name: foot03
     clip: {fileID: 8300000, guid: ac6649006dbee9e4685752e124111da7, type: 3}
     defaultVolume: 20
     group: Footstep
+    loop: 0
   - name: foot04
     clip: {fileID: 8300000, guid: 001f691d110d55648871a03f446ffa08, type: 3}
     defaultVolume: 20
     group: Footstep
+    loop: 0
   - name: attack01
     clip: {fileID: 8300000, guid: 94c93377631b5c14e959b951b435b46a, type: 3}
     defaultVolume: 1
     group: 
+    loop: 0
   - name: attack02
     clip: {fileID: 8300000, guid: 94c93377631b5c14e959b951b435b46a, type: 3}
     defaultVolume: 1
     group: 
+    loop: 0
   - name: attack03
     clip: {fileID: 8300000, guid: 94c93377631b5c14e959b951b435b46a, type: 3}
     defaultVolume: 1
     group: 
+    loop: 0
+  - name: normalBGM
+    clip: {fileID: 8300000, guid: 27ce6815d1fafca4591d6cef5d8a1327, type: 3}
+    defaultVolume: 10
+    group: 
+    loop: 1
+  - name: combatBGM
+    clip: {fileID: 8300000, guid: 7036e1f27a1570e448ceb27ee9eb76cb, type: 3}
+    defaultVolume: 0
+    group: 
+    loop: 1
 --- !u!4 &982458029
 Transform:
   m_ObjectHideFlags: 0
@@ -1131,6 +1036,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   attackIntervalRange: {x: 2, y: 5}
+  player: {fileID: 357154305}
 --- !u!4 &1700773627
 Transform:
   m_ObjectHideFlags: 0
@@ -1573,6 +1479,5 @@ SceneRoots:
   - {fileID: 7227880492119367133}
   - {fileID: 2024032528}
   - {fileID: 982458029}
-  - {fileID: 621895037}
   - {fileID: 566678894}
   - {fileID: 1700773627}

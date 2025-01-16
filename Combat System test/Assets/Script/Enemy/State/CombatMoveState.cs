@@ -28,6 +28,7 @@ public class CombatMoveState : State<EnemyController>
         enemy.NavMeshAgent.stoppingDistance = stopChaseDistance;
         timer = Random.Range(idleTimeRange.x, idleTimeRange.y);
         enemy.stayingCombatTime = 0;
+        enemy.Animator.SetBool("combatMode", true);
     }
 
     public override void Execute()
@@ -75,7 +76,7 @@ public class CombatMoveState : State<EnemyController>
                 StartIdle();
                 return;
             }
-        
+
             var vecTotarget = enemy.Target.transform.position - transform.position;
 
             var rotatePsoition = Quaternion.Euler(0, circlingSpeed * circlingDirection * Time.deltaTime, 0) * vecTotarget;
@@ -99,14 +100,12 @@ public class CombatMoveState : State<EnemyController>
 
     void StartIdle()//切换到Combat_Idle状态,而非Idle状态
     {
-        enemy.Animator.SetBool("combatMode", true);
         timer = Random.Range(idleTimeRange.x, idleTimeRange.y);
         State = AICombatState.Idle;
     }
 
     void StartChase()
     {
-        enemy.Animator.SetBool("combatMode", false);
         State = AICombatState.Chase;
     }
 

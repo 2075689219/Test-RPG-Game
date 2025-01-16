@@ -14,6 +14,7 @@ public enum EnemyState//敌人状态
 
 public class EnemyController : MonoBehaviour
 {
+    public Light highlightLight; // 引用光源
     [SerializeField] public float fov = 170;//敌人视野
     //敌人周围的目标
     public List<MeeleFighter> TargetsInRange { get; set; } = new List<MeeleFighter>();
@@ -30,8 +31,17 @@ public class EnemyController : MonoBehaviour
     //敌人自己的MeeleFighter组件
     public MeeleFighter EnemyItSelf { get; private set; }
     public float stayingCombatTime { get; set; } = 0;
-    public VisionSensor visionSensor { get;  set; }
+    public VisionSensor visionSensor { get; set; }
     public CharacterController CharacterController { get; set; }
+    private void Awake()
+    {
+        // 获取子对象中的 Light 组件
+        highlightLight = GetComponentInChildren<Light>();
+        if (highlightLight != null)
+        {
+            highlightLight.enabled = false; // 初始化为关闭状态
+        }
+    }
     private void Start()
     {
         //获取Animator组件
@@ -115,6 +125,22 @@ public class EnemyController : MonoBehaviour
         }
     }
 
+        // 启用发光效果
+    public void EnableHighlight()
+    {
+        if (highlightLight != null)
+        {
+            highlightLight.enabled = true;
+        }
+    }
 
+    // 禁用发光效果
+    public void DisableHighlight()
+    {
+        if (highlightLight != null)
+        {
+            highlightLight.enabled = false;
+        }
+    }
 }
 

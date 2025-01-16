@@ -58,6 +58,8 @@ MonoBehaviour:
     m_Bits: 64
   minMoveThreshold: 0.2
   soundInterval: 22
+  cameraController: {fileID: 0}
+  fadeDuration: 2
 --- !u!95 &6230620560096295712
 Animator:
   serializedVersion: 7
@@ -253,6 +255,30 @@ PrefabInstance:
     - target: {fileID: 4112676966222008470, guid: d840a6dbc67309048a6b69230a55f1f7, type: 3}
       propertyPath: m_Name
       value: Knight_05_03
+      objectReference: {fileID: 0}
+    - target: {fileID: 5490574616247526935, guid: d840a6dbc67309048a6b69230a55f1f7, type: 3}
+      propertyPath: m_AABB.m_Center.x
+      value: NaN
+      objectReference: {fileID: 0}
+    - target: {fileID: 5490574616247526935, guid: d840a6dbc67309048a6b69230a55f1f7, type: 3}
+      propertyPath: m_AABB.m_Center.y
+      value: NaN
+      objectReference: {fileID: 0}
+    - target: {fileID: 5490574616247526935, guid: d840a6dbc67309048a6b69230a55f1f7, type: 3}
+      propertyPath: m_AABB.m_Center.z
+      value: NaN
+      objectReference: {fileID: 0}
+    - target: {fileID: 5490574616247526935, guid: d840a6dbc67309048a6b69230a55f1f7, type: 3}
+      propertyPath: m_AABB.m_Extent.x
+      value: NaN
+      objectReference: {fileID: 0}
+    - target: {fileID: 5490574616247526935, guid: d840a6dbc67309048a6b69230a55f1f7, type: 3}
+      propertyPath: m_AABB.m_Extent.y
+      value: NaN
+      objectReference: {fileID: 0}
+    - target: {fileID: 5490574616247526935, guid: d840a6dbc67309048a6b69230a55f1f7, type: 3}
+      propertyPath: m_AABB.m_Extent.z
+      value: NaN
       objectReference: {fileID: 0}
     - target: {fileID: 5556116114812017704, guid: d840a6dbc67309048a6b69230a55f1f7, type: 3}
       propertyPath: m_IsActive
