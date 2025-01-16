@@ -120,14 +120,16 @@ public class PlayerController : MonoBehaviour
         characterController.Move(velocity * Time.deltaTime);
 
         //BGM设置
-        AudioManager.Instance.SetVolume("combatBGM",0.3f);
-        AudioManager.Instance.SetVolume("normalBGM",0.3f);
+        AudioManager.Instance.SetVolume("combatBGM", 0.3f);
+        AudioManager.Instance.SetVolume("normalBGM", 0.3f);
         if (combatController.CombatMode)
         {
             combatBGMTimer += Time.deltaTime;
 
             if (!isCombatBGMPlaying)
             {
+                AudioManager.Instance.SetVolume("combatBGM", 0.3f);
+                AudioManager.Instance.SetVolume("normalBGM", 0.3f);
                 StartCoroutine(SwitchBGM("combatBGM", "normalBGM", true));
                 isCombatBGMPlaying = true;
             }
@@ -138,6 +140,8 @@ public class PlayerController : MonoBehaviour
 
             if (isCombatBGMPlaying && combatBGMTimer >= combatBGMMinTime)
             {
+                AudioManager.Instance.SetVolume("combatBGM", 0.3f);
+                AudioManager.Instance.SetVolume("normalBGM", 0.3f);
                 StartCoroutine(SwitchBGM("normalBGM", "combatBGM", false));
                 isCombatBGMPlaying = false;
                 combatBGMTimer = 0f; // 重置计时器

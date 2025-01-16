@@ -36,7 +36,7 @@ public class CombatController : MonoBehaviour
                 return;
             }
 
-            combatMode = value && targetEnemy != null;  // 确保只有在有目标时才开启
+            if(combatMode = value && targetEnemy != null)  // 确保只有在有目标时才开启
             animator.SetBool("combatMode", combatMode);
 
             if (!combatMode)
