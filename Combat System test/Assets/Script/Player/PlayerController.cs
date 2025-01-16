@@ -57,7 +57,7 @@ public class PlayerController : MonoBehaviour
         if (meeleFighter.InAction)
         {
             targetRotation = transform.rotation;
-            animator.SetFloat("moveAmount", 0);
+            animator.SetFloat("forwardSpeed", 0);
             return;
         }
 
@@ -93,7 +93,6 @@ public class PlayerController : MonoBehaviour
             {
                 targetRotation = Quaternion.LookRotation(targetVec);
                 transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotateSpeed * Time.deltaTime);
-                PlayArmorSound(moveAmount);//播放盔甲声
             }
 
             velocity /= 3;
@@ -105,7 +104,6 @@ public class PlayerController : MonoBehaviour
             if (moveAmount > 0f)
             {
                 targetRotation = Quaternion.LookRotation(moveDir);//转向
-                PlayArmorSound(moveAmount);//播放盔甲声
             }
             //平滑旋转
             transform.rotation = Quaternion.RotateTowards(transform.rotation,
@@ -193,20 +191,6 @@ public class PlayerController : MonoBehaviour
         , groundCheckRidous, groundLayer);
     }
 
-    private void PlayArmorSound(float moveAmount)
-    {
-        soundTimer += Time.deltaTime;
-
-        if (moveAmount > minMoveThreshold && soundTimer >= soundInterval)
-        {
-            AudioManager.Instance.Play("armorSound"); // 播放盔甲音效
-            soundTimer = 0f;
-        }
-        else if (moveAmount <= minMoveThreshold)
-        {
-            AudioManager.Instance.Stop("armorSound"); // 停止盔甲音效
-        }
-    }
 
 
 

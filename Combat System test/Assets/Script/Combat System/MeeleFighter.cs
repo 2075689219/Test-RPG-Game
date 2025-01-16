@@ -2,12 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using System;
 
 public enum AttackStates { none, start, impact, end }
 public class MeeleFighter : MonoBehaviour
 {
     [SerializeField] List<AttackData> attackList;
     [SerializeField] GameObject weapon;
+
+    public event Action OnGotGit;
+    public event Action OnHitComplete;
 
     BoxCollider weaponCollider;
     Animator animator;
@@ -101,13 +105,17 @@ public class MeeleFighter : MonoBehaviour
     {
         if (other.tag == "HitBox" && !InAction)//攻击状态不可以被打断（播放受击动画）
         {
-            StartCoroutine(PlayHitReaction());
+            StartCoroutine(PlayHitReaction(other.GetComponentInParent<MeeleFighter>().transform));
         }
     }
 
-    IEnumerator PlayHitReaction()
+    IEnumerator PlayHitReaction(Transform attacker)
     {
         InAction = true;
+
+        var dispVec = attacker.position - transform.position;
+        dispVec.y = 0;
+        transform.rotation = Quaternion.LookRotation(dispVec);
 
         animator.CrossFade("Impact", 0.2f);//占用当前动画的20%时间过渡，必须保证前一个动画的时间不能太长
         yield return null;//等待一帧，保证接下来的动画处于过渡阶段
@@ -128,7 +136,9 @@ public class MeeleFighter : MonoBehaviour
         dispVec.y = 0;
         transform.rotation = Quaternion.LookRotation(dispVec);//面向敌人方向
         enemy.transform.rotation = Quaternion.LookRotation(-dispVec);//敌人面向玩家方向
-        
+
+        OnGotGit?.Invoke();
+
         // 计算目标位置，稍微靠近敌人
         var targetPos = enemy.transform.position - dispVec.normalized * 1.5f;
 
@@ -153,6 +163,8 @@ public class MeeleFighter : MonoBehaviour
 
         enemy.EnemyItSelf.InCounter = false;
         InCounter = false;
+
+        OnHitComplete?.Invoke();
         InAction = false;
     }
 

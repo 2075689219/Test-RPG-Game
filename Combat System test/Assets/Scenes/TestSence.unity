@@ -699,12 +699,12 @@ MonoBehaviour:
     group: 
     loop: 0
   - name: normalBGM
-    clip: {fileID: 8300000, guid: 27ce6815d1fafca4591d6cef5d8a1327, type: 3}
-    defaultVolume: 10
+    clip: {fileID: 8300000, guid: 79da936525bb87a4789aa8e3d91b7c92, type: 3}
+    defaultVolume: 0
     group: 
     loop: 1
   - name: combatBGM
-    clip: {fileID: 8300000, guid: 7036e1f27a1570e448ceb27ee9eb76cb, type: 3}
+    clip: {fileID: 8300000, guid: 6fc0d1125a15c9840823d9333d45f620, type: 3}
     defaultVolume: 0
     group: 
     loop: 1

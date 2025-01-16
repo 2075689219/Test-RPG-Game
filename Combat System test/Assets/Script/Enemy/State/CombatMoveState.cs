@@ -33,7 +33,15 @@ public class CombatMoveState : State<EnemyController>
 
     public override void Execute()
     {
-        if (enemy.Target == null) return;
+        if (enemy.Target == null)
+        {
+            enemy.Target = enemy.FindTarget();
+            if(enemy.Target == null)
+            {
+                enemy.ChangeState(EnemyState.Idle);
+                return;
+            }
+        } 
 
         timer -= Time.deltaTime;
         //enemy和player之间的距离

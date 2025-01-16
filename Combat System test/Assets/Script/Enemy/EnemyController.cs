@@ -8,6 +8,7 @@ public enum EnemyState//敌人状态
     Idle,
     CombatMove,
     Attack,
+    Hit,
     RetreatAfterAttackState,
     Dead
 }
@@ -60,10 +61,18 @@ public class EnemyController : MonoBehaviour
         stateDict[EnemyState.Attack] = GetComponent<AttackState>();
         stateDict[EnemyState.RetreatAfterAttackState] = GetComponent<RetreatAfterAttackState>();
         stateDict[EnemyState.Dead] = GetComponent<DeadState>();
+        stateDict[EnemyState.Hit] = GetComponent<HitState>();
 
         //创建enemy状态机并切换到Idle状态
         stateMachine = new StateMachine<EnemyController>(this);
         stateMachine.ChangeState(stateDict[EnemyState.Idle]);
+
+        EnemyItSelf.OnGotGit += ReactToHit;
+    }
+
+    void ReactToHit()
+    {
+        ChangeState(EnemyState.Hit);
     }
 
     //判断当前状态是否是某个状态
@@ -125,7 +134,7 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-        // 启用发光效果
+    // 启用发光效果
     public void EnableHighlight()
     {
         if (highlightLight != null)
@@ -141,6 +150,24 @@ public class EnemyController : MonoBehaviour
         {
             highlightLight.enabled = false;
         }
+    }
+
+    public MeeleFighter FindTarget()
+    {
+        foreach (var target in TargetsInRange)
+        {
+            var vecTotarget = target.transform.position - transform.position;
+            float angle = Vector3.Angle(transform.forward, vecTotarget);
+
+            if( angle <= fov /2)
+            {
+                // Target = target;//选中目标
+                // .ChangeState(EnemyState.CombatMove);//切换到追击状态
+                // break;
+                return target;
+            }
+        }
+        return null;
     }
 }
 

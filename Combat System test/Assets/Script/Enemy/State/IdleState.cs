@@ -14,19 +14,9 @@ public class IdleState : State<EnemyController>
 
     public override void Execute( )
     {
-        foreach (var target in enemy.TargetsInRange)
-        {
-            var vecTotarget = target.transform.position - transform.position;
-            float angle = Vector3.Angle(transform.forward, vecTotarget);
-
-            if( angle <= enemy.fov /2)
-            {
-                enemy.Target = target;//选中目标
-                enemy.ChangeState(EnemyState.CombatMove);//切换到追击状态
-                break;
-            }
-        }
-
+        enemy.Target = enemy.FindTarget();
+        if(enemy.Target != null)
+            enemy.ChangeState(EnemyState.CombatMove);//切换到追击状态
     }
 
     public override void Exit( )
