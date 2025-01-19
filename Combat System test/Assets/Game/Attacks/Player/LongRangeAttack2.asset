@@ -15,9 +15,9 @@ MonoBehaviour:
   <AnimName>k__BackingField: LongRangeAttack2
   <HitBox>k__BackingField: 0
   <StartTime>k__BackingField: 0.35
-  <EndTime>k__BackingField: 0.4
+  <EndTime>k__BackingField: 0.6
   <moveToTarget>k__BackingField: 1
-  <distanceToStop>k__BackingField: 0.5
-  <maxMovement>k__BackingField: 4
+  <distanceToStop>k__BackingField: 6
+  <maxMovement>k__BackingField: 5
   <moveStartTime>k__BackingField: 0
   <moveEndTime>k__BackingField: 1

@@ -1230,6 +1230,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5113899949198416122, guid: 7ab785ed7f727a94f9e25dee6283bc53, type: 3}
+      propertyPath: distanceRange.y
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 5113899949198416122, guid: 7ab785ed7f727a94f9e25dee6283bc53, type: 3}
+      propertyPath: stopRetreatDistance
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 5756938332058434536, guid: 7ab785ed7f727a94f9e25dee6283bc53, type: 3}
       propertyPath: circlingSpeed
       value: 20
@@ -1487,6 +1495,14 @@ PrefabInstance:
     - target: {fileID: 3117725951670205820, guid: 7ab785ed7f727a94f9e25dee6283bc53, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5113899949198416122, guid: 7ab785ed7f727a94f9e25dee6283bc53, type: 3}
+      propertyPath: distanceRange.y
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 5113899949198416122, guid: 7ab785ed7f727a94f9e25dee6283bc53, type: 3}
+      propertyPath: stopRetreatDistance
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 5756938332058434536, guid: 7ab785ed7f727a94f9e25dee6283bc53, type: 3}
       propertyPath: circlingSpeed

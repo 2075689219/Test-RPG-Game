@@ -8,7 +8,7 @@ public class DeadState : State<EnemyController>
     public override void Enter(EnemyController owner)
     {
         enemy = owner;
-        
+        StopAllCoroutines();
         // 禁用敌人感知和控制
         enemy.visionSensor.gameObject.SetActive(false);
         EnemyManager.instance.RemoveEnemyInRange(enemy);

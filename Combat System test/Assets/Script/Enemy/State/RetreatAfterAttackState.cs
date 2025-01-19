@@ -8,11 +8,11 @@ public class RetreatAfterAttackState : State<EnemyController>
     [SerializeField] Vector2 distanceRange = new Vector2(3, 6);
     [SerializeField] float stopRetreatDistance = 6f;//应该与CombatMoveState的stopChaseDistance相同
     EnemyController enemy;
-    Vector3 targetPos;
+    //Vector3 targetPos;
     public override void Enter(EnemyController owner)
     {
         enemy = owner;
-        targetPos = enemy.Target.transform.position;
+        //targetPos = enemy.Target.transform.position;
         // 在进入状态时为 stopRetreatDistance 赋随机值
         stopRetreatDistance = Random.Range(distanceRange.x, distanceRange.y);
     }
@@ -20,7 +20,7 @@ public class RetreatAfterAttackState : State<EnemyController>
     override public void Execute()
     {
 
-        if (Vector3.Distance(enemy.Target.transform.position, targetPos) > stopRetreatDistance)
+        if (Vector3.Distance(enemy.Target.transform.position, transform.position) > stopRetreatDistance)
         {
             enemy.ChangeState(EnemyState.CombatMove);
         }

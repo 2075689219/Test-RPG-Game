@@ -67,9 +67,10 @@ public class EnemyController : MonoBehaviour
         stateMachine = new StateMachine<EnemyController>(this);
         stateMachine.ChangeState(stateDict[EnemyState.Idle]);
 
+
         EnemyItSelf.OnGotHit += () =>
         {
-            if(EnemyItSelf.Health>0)
+            if (EnemyItSelf.Health > 0)
                 ChangeState(EnemyState.Hit);
             else
                 ChangeState(EnemyState.Dead);
@@ -104,10 +105,11 @@ public class EnemyController : MonoBehaviour
         //执行状态机
         stateMachine.Execute();
 
+
         var deltaPos = transform.position - prePos;
         var velocity = deltaPos / Time.deltaTime;
 
-        if(Target?.Health <= 0)
+        if (Target?.Health <= 0)
         {
             TargetsInRange.Remove(Target);
             EnemyManager.instance.RemoveEnemyInRange(this);

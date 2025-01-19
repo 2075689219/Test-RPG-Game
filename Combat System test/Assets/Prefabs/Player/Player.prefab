@@ -120,6 +120,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53856e62a4d2e804a92e4fdcc33f92f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <Health>k__BackingField: 100
   attackList:
   - {fileID: 11400000, guid: f1ee16e177fd2de4495b5fd2aaeacc99, type: 2}
   - {fileID: 11400000, guid: 3654f845923c2b24db67d7c5ba3125af, type: 2}
