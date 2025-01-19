@@ -43,6 +43,12 @@ public class CombatMoveState : State<EnemyController>
             }
         } 
 
+        if(enemy.Target.Health <= 0)
+        {
+            enemy.Target = null;
+            enemy.ChangeState(EnemyState.Idle);
+            return;
+        }
         timer -= Time.deltaTime;
         //enemy和player之间的距离
         var distance = Vector3.Distance(enemy.Target.transform.position, enemy.transform.position);

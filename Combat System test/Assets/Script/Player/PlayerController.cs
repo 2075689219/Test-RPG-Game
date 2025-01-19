@@ -54,7 +54,7 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
 
-        if (meeleFighter.InAction)
+        if (meeleFighter.InAction || meeleFighter.Health <= 0)
         {
             targetRotation = transform.rotation;
             animator.SetFloat("forwardSpeed", 0);
@@ -117,34 +117,6 @@ public class PlayerController : MonoBehaviour
         //实现移动和转向
         characterController.Move(velocity * Time.deltaTime);
 
-        //BGM设置
-        AudioManager.Instance.SetVolume("combatBGM", 0.1f);
-        AudioManager.Instance.SetVolume("normalBGM", 0.1f);
-        if (combatController.CombatMode)
-        {
-            combatBGMTimer += Time.deltaTime;
-
-            if (!isCombatBGMPlaying)
-            {
-                AudioManager.Instance.SetVolume("combatBGM", 0.1f);
-                AudioManager.Instance.SetVolume("normalBGM", 0.1f);
-                StartCoroutine(SwitchBGM("combatBGM", "normalBGM", true));
-                isCombatBGMPlaying = true;
-            }
-        }
-        else
-        {
-            combatBGMTimer += Time.deltaTime;
-
-            if (isCombatBGMPlaying && combatBGMTimer >= combatBGMMinTime)
-            {
-                AudioManager.Instance.SetVolume("combatBGM", 0.1f);
-                AudioManager.Instance.SetVolume("normalBGM", 0.1f);
-                StartCoroutine(SwitchBGM("normalBGM", "combatBGM", false));
-                isCombatBGMPlaying = false;
-                combatBGMTimer = 0f; // 重置计时器
-            }
-        }
     }
 
     private IEnumerator SwitchBGM(string targetBGM, string currentBGM, bool isEnteringCombat)

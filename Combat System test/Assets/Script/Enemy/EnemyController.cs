@@ -67,7 +67,13 @@ public class EnemyController : MonoBehaviour
         stateMachine = new StateMachine<EnemyController>(this);
         stateMachine.ChangeState(stateDict[EnemyState.Idle]);
 
-        EnemyItSelf.OnGotGit += ReactToHit;
+        EnemyItSelf.OnGotHit += () =>
+        {
+            if(EnemyItSelf.Health>0)
+                ChangeState(EnemyState.Hit);
+            else
+                ChangeState(EnemyState.Dead);
+        };
     }
 
     void ReactToHit()
@@ -100,6 +106,12 @@ public class EnemyController : MonoBehaviour
 
         var deltaPos = transform.position - prePos;
         var velocity = deltaPos / Time.deltaTime;
+
+        if(Target?.Health <= 0)
+        {
+            TargetsInRange.Remove(Target);
+            EnemyManager.instance.RemoveEnemyInRange(this);
+        }
 
         float forwardSpeed = Vector3.Dot(transform.forward, velocity); //计算前向速度 
         float forwardSpeedPercent = forwardSpeed / NavMeshAgent.speed;//速度百分比
@@ -159,7 +171,7 @@ public class EnemyController : MonoBehaviour
             var vecTotarget = target.transform.position - transform.position;
             float angle = Vector3.Angle(transform.forward, vecTotarget);
 
-            if( angle <= fov /2)
+            if (angle <= fov / 2)
             {
                 // Target = target;//选中目标
                 // .ChangeState(EnemyState.CombatMove);//切换到追击状态

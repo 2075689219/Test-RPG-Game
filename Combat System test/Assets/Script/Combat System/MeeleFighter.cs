@@ -7,12 +7,13 @@ using System;
 public enum AttackStates { none, start, impact, end }
 public class MeeleFighter : MonoBehaviour
 {
+    [field: SerializeField] public float Health { get; private set; } = 100;
     [SerializeField] List<AttackData> attackList;
     [SerializeField] List<AttackData> longRangeAttackList;
     [SerializeField] GameObject weapon;
     [SerializeField] Vector2 LongRangeAttackRange = new Vector2(2.4f, 6);
 
-    public event Action OnGotGit;
+    public event Action OnGotHit;
     public event Action OnHitComplete;
 
     BoxCollider weaponCollider;
@@ -22,7 +23,7 @@ public class MeeleFighter : MonoBehaviour
     public AttackStates AttackState { get; private set; }
     bool doCombo;
     int comboCount = 0;
-    public bool IsTakingHit {get ; private set;}
+    public bool IsTakingHit { get; private set; }
 
     //////////////////Awake()////////////////////////////////////////////////////////////////////
     private void Awake()
@@ -99,7 +100,7 @@ public class MeeleFighter : MonoBehaviour
 
         while (timer <= animState.length)
         {
-            if(IsTakingHit) break;
+            if (IsTakingHit) break;
             timer += Time.deltaTime;
             float normalizedTime = timer / animState.length;
 
@@ -147,9 +148,15 @@ public class MeeleFighter : MonoBehaviour
     //////////////////HitReaction()////////////////////////////////////////////////////////////////////
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "HitBox" && !IsTakingHit &&!InCounter)//攻击状态不可以被打断（播放受击动画）
+        if (other.tag == "HitBox" && !IsTakingHit && !InCounter)//攻击状态不可以被打断（播放受击动画）
         {
-            StartCoroutine(PlayHitReaction(other.GetComponentInParent<MeeleFighter>().transform));
+            OnGotHit?.Invoke();
+
+            TakeDamage(20f);
+            if (Health > 0)
+                StartCoroutine(PlayHitReaction(other.GetComponentInParent<MeeleFighter>().transform));
+            else
+                PlayDeathAnim();
         }
     }
 
@@ -183,7 +190,6 @@ public class MeeleFighter : MonoBehaviour
         transform.rotation = Quaternion.LookRotation(dispVec);//面向敌人方向
         enemy.transform.rotation = Quaternion.LookRotation(-dispVec);//敌人面向玩家方向
 
-        OnGotGit?.Invoke();
 
         // 计算目标位置，稍微靠近敌人
         var targetPos = enemy.transform.position - dispVec.normalized * 1.5f;
@@ -232,4 +238,13 @@ public class MeeleFighter : MonoBehaviour
 
     public List<AttackData> AttackList => attackList;
     public bool IsCounterable => AttackState == AttackStates.start && comboCount == 0;
+
+    void TakeDamage(float damage)
+    {
+        Health = Mathf.Clamp(Health - damage, 0, Health);
+    }
+    void PlayDeathAnim()
+    {
+        animator.CrossFade("Death",0.2f);
+    }
 }
