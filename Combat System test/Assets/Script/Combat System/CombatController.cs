@@ -75,7 +75,7 @@ public class CombatController : MonoBehaviour
             TargetEnemy = null; // 目标被销毁，清除引用
         }
 
-        if (Input.GetButtonDown("Attack"))
+        if (Input.GetButtonDown("Attack") && !meeleFighter.IsTakingHit)
         {
             //如果player周围有敌人处于攻击的第一下，并且player不处于攻击状态，就尝试反击
             var attakingEnemy = EnemyManager.instance.GetAttackingEnemy();
@@ -87,7 +87,14 @@ public class CombatController : MonoBehaviour
             }
             else
             {
-                meeleFighter.TryToAttack();
+                if(targetEnemy == null)
+                {
+                    meeleFighter.TryToAttack();
+                }else
+                {
+                    meeleFighter.TryToAttack(targetEnemy.EnemyItSelf);
+                }
+                
 
                 CombatMode = true;
             }

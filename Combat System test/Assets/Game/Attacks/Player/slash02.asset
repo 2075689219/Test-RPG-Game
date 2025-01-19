@@ -13,5 +13,11 @@ MonoBehaviour:
   m_Name: slash02
   m_EditorClassIdentifier: 
   <AnimName>k__BackingField: slash02
+  <HitBox>k__BackingField: 0
   <StartTime>k__BackingField: 0.536
   <EndTime>k__BackingField: 0.636
+  <moveToTarget>k__BackingField: 1
+  <distanceToStop>k__BackingField: 0.4
+  <maxMovement>k__BackingField: 0.5
+  <moveStartTime>k__BackingField: 0
+  <moveEndTime>k__BackingField: 0.4

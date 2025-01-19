@@ -125,7 +125,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 3654f845923c2b24db67d7c5ba3125af, type: 2}
   - {fileID: 11400000, guid: 94a6daa24448abd449460573a3dd245c, type: 2}
   - {fileID: 11400000, guid: 92f571c011f1d5c419ead8f53e3bbfc8, type: 2}
+  longRangeAttackList: []
   weapon: {fileID: 5055018897422053397}
+  LongRangeAttackRange: {x: 3, y: 4}
 --- !u!114 &1753321033340067134
 MonoBehaviour:
   m_ObjectHideFlags: 0

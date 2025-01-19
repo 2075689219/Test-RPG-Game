@@ -8,6 +8,7 @@ public class HitState : State<EnemyController>
     EnemyController enemy;
     public override void Enter(EnemyController owner)
     {
+        StopAllCoroutines();
         enemy = owner;
         enemy.EnemyItSelf.OnHitComplete += () => StartCoroutine(GoToCombatMOvement());
     }

@@ -8,7 +8,9 @@ public enum AttackStates { none, start, impact, end }
 public class MeeleFighter : MonoBehaviour
 {
     [SerializeField] List<AttackData> attackList;
+    [SerializeField] List<AttackData> longRangeAttackList;
     [SerializeField] GameObject weapon;
+    [SerializeField] Vector2 LongRangeAttackRange = new Vector2(2.4f, 6);
 
     public event Action OnGotGit;
     public event Action OnHitComplete;
@@ -20,6 +22,7 @@ public class MeeleFighter : MonoBehaviour
     public AttackStates AttackState { get; private set; }
     bool doCombo;
     int comboCount = 0;
+    public bool IsTakingHit {get ; private set;}
 
     //////////////////Awake()////////////////////////////////////////////////////////////////////
     private void Awake()
@@ -37,11 +40,11 @@ public class MeeleFighter : MonoBehaviour
 
     }
     //////////////////Attack()////////////////////////////////////////////////////////////////////
-    public void TryToAttack()
+    public void TryToAttack(MeeleFighter target = null)
     {
         if (!InAction)
         {
-            StartCoroutine(Attack());
+            StartCoroutine(Attack(target));
         }
         else if (AttackState == AttackStates.impact || AttackState == AttackStates.end)
         {
@@ -49,12 +52,46 @@ public class MeeleFighter : MonoBehaviour
         }
     }
 
-    IEnumerator Attack()
+    IEnumerator Attack(MeeleFighter target = null)
     {
+        var attack = attackList[comboCount];//攻击列表的具体第几个攻击
         InAction = true;
         AttackState = AttackStates.start;
 
-        animator.CrossFade(attackList[comboCount].AnimName, 0.2f);//占用当前动画的20%时间过渡，必须保证前一个动画的时间不能太长
+        Vector3 startPos = transform.position;
+        Vector3 targetPos = Vector3.zero;
+
+        var attackDir = transform.forward;//攻击方向
+        if (target != null)
+        {
+            var vecTotarget = target.transform.position - transform.position;
+            vecTotarget.y = 0;
+            attackDir = vecTotarget.normalized;
+
+            float distance = vecTotarget.magnitude - attack.distanceToStop;
+            if (distance > LongRangeAttackRange.x && longRangeAttackList.Count > 0)
+            {
+                if (UnityEngine.Random.Range(0, 2) == 0)
+                {
+                    attack = longRangeAttackList[0];
+                }
+                else
+                {
+                    attack = longRangeAttackList[1];
+                }
+
+            }
+            if (attack.moveToTarget)
+            {
+                if (distance <= attack.maxMovement)
+                    targetPos = target.transform.position - attackDir * attack.distanceToStop;
+                else
+                    targetPos = startPos + attackDir * attack.maxMovement;
+            }
+
+        }
+
+        animator.CrossFade(attack.AnimName, 0.2f);//占用当前动画的20%时间过渡，必须保证前一个动画的时间不能太长
         yield return null;//等待一帧，保证接下来的动画处于过渡阶段
         var animState = animator.GetNextAnimatorStateInfo(1);//获取下一个动画的信息(也就是攻击动画)
 
@@ -62,21 +99,28 @@ public class MeeleFighter : MonoBehaviour
 
         while (timer <= animState.length)
         {
+            if(IsTakingHit) break;
             timer += Time.deltaTime;
             float normalizedTime = timer / animState.length;
 
-            if (InCounter) break;//TODO:这里有问题
+            //if (InCounter) break;//TODO:这里有问题
 
-            if (AttackState == AttackStates.start && normalizedTime >= attackList[comboCount].StartTime)
+            if (target != null && attack.moveToTarget)
+            {
+                float percTime = (normalizedTime - attack.StartTime) / (attack.EndTime - attack.StartTime);
+                transform.position = Vector3.Lerp(startPos, targetPos, percTime);
+            }
+
+            if (AttackState == AttackStates.start && normalizedTime >= attack.StartTime)
             {
                 if (InCounter) break;//TODO:这里有问题
                 AttackState = AttackStates.impact;
                 //攻击生效
-                EnableHitBox(attackList[comboCount]);
+                EnableHitBox(attack);
                 //播放音效
-                AudioManager.Instance.Play(attackList[comboCount].name);
+                AudioManager.Instance.Play(attack.name);
             }
-            if (AttackState == AttackStates.impact && normalizedTime >= attackList[comboCount].EndTime)
+            if (AttackState == AttackStates.impact && normalizedTime >= attack.EndTime)
             {
                 AttackState = AttackStates.end;
                 //结束攻击
@@ -103,7 +147,7 @@ public class MeeleFighter : MonoBehaviour
     //////////////////HitReaction()////////////////////////////////////////////////////////////////////
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "HitBox" && !InAction)//攻击状态不可以被打断（播放受击动画）
+        if (other.tag == "HitBox" && !IsTakingHit &&!InCounter)//攻击状态不可以被打断（播放受击动画）
         {
             StartCoroutine(PlayHitReaction(other.GetComponentInParent<MeeleFighter>().transform));
         }
@@ -112,6 +156,7 @@ public class MeeleFighter : MonoBehaviour
     IEnumerator PlayHitReaction(Transform attacker)
     {
         InAction = true;
+        IsTakingHit = true;
 
         var dispVec = attacker.position - transform.position;
         dispVec.y = 0;
@@ -122,6 +167,7 @@ public class MeeleFighter : MonoBehaviour
         var animState = animator.GetNextAnimatorStateInfo(1);//获取下一个动画的信息(也就是受击动画)
         yield return new WaitForSeconds(animState.length * 0.6f);
 
+        IsTakingHit = false;
         InAction = false;
     }
 

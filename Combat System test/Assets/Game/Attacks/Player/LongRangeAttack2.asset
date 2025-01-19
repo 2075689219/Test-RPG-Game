@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dbb308d3a68cb79458303b42c0e21778, type: 3}
-  m_Name: slash03
+  m_Name: LongRangeAttack2
   m_EditorClassIdentifier: 
-  <AnimName>k__BackingField: slash03
+  <AnimName>k__BackingField: LongRangeAttack2
   <HitBox>k__BackingField: 0
-  <StartTime>k__BackingField: 0.55
-  <EndTime>k__BackingField: 0.583
+  <StartTime>k__BackingField: 0.35
+  <EndTime>k__BackingField: 0.4
   <moveToTarget>k__BackingField: 1
-  <distanceToStop>k__BackingField: 0.4
-  <maxMovement>k__BackingField: 0.5
+  <distanceToStop>k__BackingField: 0.5
+  <maxMovement>k__BackingField: 4
   <moveStartTime>k__BackingField: 0
-  <moveEndTime>k__BackingField: 0.4
+  <moveEndTime>k__BackingField: 1
